@@ -1,0 +1,1854 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "createdAt": "2026-01-01T00:00:00Z",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "categories": [
+    {
+      "name": "Housing",
+      "subcategories": [
+        "Rent",
+        "Electricity",
+        "Water & Sewage",
+        "Gas",
+        "Internet",
+        "Maintenance & Repairs",
+        "Phone",
+        "Furniture",
+        "Decor",
+        "Household Items",
+        "Cleaning Supplies"
+      ],
+      "subcategoryHints": {
+        "Cleaning Supplies": "Cleaning products, including those bought in a supermarket."
+      },
+      "emoji": "🏠",
+      "subcategoryEmoji": {
+        "Rent": "🔑",
+        "Electricity": "💡",
+        "Water & Sewage": "🚰",
+        "Gas": "🔥",
+        "Internet": "🌐",
+        "Maintenance & Repairs": "🔧",
+        "Phone": "📞",
+        "Furniture": "🛋️",
+        "Decor": "🖼️",
+        "Household Items": "🍳",
+        "Cleaning Supplies": "🧽"
+      }
+    },
+    {
+      "name": "Food",
+      "subcategories": [
+        "Groceries",
+        "Cafés & Snacks",
+        "Delivery"
+      ],
+      "subcategoryHints": {
+        "Cafés & Snacks": "Cafés, bakeries with tables, snack bars, food trucks, fast food.",
+        "Groceries": "Supermarket items and take-away bakery purchases."
+      },
+      "emoji": "🍽️",
+      "subcategoryEmoji": {
+        "Groceries": "🛒",
+        "Cafés & Snacks": "☕",
+        "Delivery": "🛵"
+      }
+    },
+    {
+      "name": "Transport",
+      "subcategories": [
+        "Public Transit",
+        "Taxi & Rideshare"
+      ],
+      "emoji": "🚇",
+      "subcategoryEmoji": {
+        "Public Transit": "🚌",
+        "Taxi & Rideshare": "🚕"
+      },
+      "subcategoryHints": {
+        "Taxi & Rideshare": "Taxi or ride-hailing rides inside the home city only, and never to or from an airport. Every other taxi or ride-hailing ride is Travel › Vehicle."
+      }
+    },
+    {
+      "name": "Health",
+      "subcategories": [
+        "Health Insurance",
+        "Doctor Visits",
+        "Tests & Exams",
+        "Medication",
+        "Dentist",
+        "Therapy",
+        "General",
+        "Fitness"
+      ],
+      "emoji": "🩺",
+      "subcategoryEmoji": {
+        "Health Insurance": "🛡️",
+        "Doctor Visits": "🏥",
+        "Tests & Exams": "🔬",
+        "Medication": "💊",
+        "Dentist": "🦷",
+        "Therapy": "🧠",
+        "General": "🩹",
+        "Fitness": "🏋️"
+      },
+      "subcategoryHints": {
+        "Fitness": "Gym memberships and fitness classes."
+      }
+    },
+    {
+      "name": "Subscriptions & Digital Services",
+      "subcategories": [
+        "Streaming",
+        "Cloud Storage",
+        "Software & Apps"
+      ],
+      "emoji": "📱",
+      "subcategoryEmoji": {
+        "Streaming": "📺",
+        "Cloud Storage": "☁️",
+        "Software & Apps": "🖥️"
+      }
+    },
+    {
+      "name": "Personal Shopping",
+      "subcategories": [
+        "Clothing",
+        "Shoes",
+        "Electronics",
+        "Personal Items",
+        "Hygiene & Beauty",
+        "Gifts"
+      ],
+      "subcategoryHints": {
+        "Hygiene & Beauty": "Toiletries, including those bought in a supermarket.",
+        "Gifts": "Gifts bought for other people."
+      },
+      "emoji": "🛍️",
+      "subcategoryEmoji": {
+        "Clothing": "👕",
+        "Shoes": "👟",
+        "Electronics": "💻",
+        "Personal Items": "🎒",
+        "Hygiene & Beauty": "🧴",
+        "Gifts": "🎁"
+      }
+    },
+    {
+      "name": "Leisure & Entertainment",
+      "subcategories": [
+        "Cinema & Events",
+        "Bars & Restaurants",
+        "Hobbies",
+        "Books",
+        "Alcoholic Drinks"
+      ],
+      "subcategoryHints": {
+        "Bars & Restaurants": "Bars, restaurants, pubs, breweries, wine bars, taverns, bistros (consumed on the premises).",
+        "Alcoholic Drinks": "Alcohol bought to take away (supermarkets, wine shops, liquor stores)."
+      },
+      "emoji": "🎭",
+      "subcategoryEmoji": {
+        "Cinema & Events": "🎟️",
+        "Bars & Restaurants": "🍻",
+        "Hobbies": "🎨",
+        "Books": "📚",
+        "Alcoholic Drinks": "🍷"
+      }
+    },
+    {
+      "name": "Travel",
+      "subcategories": [
+        "Transport Tickets",
+        "Accommodation",
+        "Travel Groceries",
+        "Cafés & Snacks",
+        "Bars & Restaurants",
+        "Alcoholic Drinks",
+        "Activities & Sightseeing",
+        "Vehicle"
+      ],
+      "hint": "Spending on a trip that fits a Travel subcategory: transport, accommodation, food and drink, activities and vehicle. Other purchases made on a trip keep their normal category.",
+      "subcategoryHints": {
+        "Transport Tickets": "Flights, intercity trains and buses, ferries.",
+        "Accommodation": "Hotels, hostels, rentals, camping.",
+        "Travel Groceries": "Supermarkets and take-away bakery purchases only.",
+        "Cafés & Snacks": "Cafés, bakeries with tables, snack bars, food trucks, fast food while travelling.",
+        "Bars & Restaurants": "Bars, restaurants, pubs, breweries, wine bars while travelling.",
+        "Alcoholic Drinks": "Bottles bought to take away while travelling.",
+        "Activities & Sightseeing": "Museums, tours, attractions, shows, events.",
+        "Vehicle": "Car rental, fuel, tolls, parking, fines, and taxi or ride-hailing (Uber, Cabify, Bolt, FreeNow) rides."
+      },
+      "emoji": "✈️",
+      "subcategoryEmoji": {
+        "Transport Tickets": "🎫",
+        "Accommodation": "🏨",
+        "Travel Groceries": "🛒",
+        "Cafés & Snacks": "☕",
+        "Bars & Restaurants": "🍻",
+        "Alcoholic Drinks": "🍷",
+        "Activities & Sightseeing": "🏛️",
+        "Vehicle": "🚗"
+      }
+    },
+    {
+      "name": "Pets",
+      "subcategories": [
+        "Food",
+        "Litter",
+        "Toys",
+        "Other",
+        "Vet"
+      ],
+      "emoji": "🐱",
+      "subcategoryEmoji": {
+        "Food": "🐟",
+        "Litter": "🧺",
+        "Toys": "🧶",
+        "Other": "🐾",
+        "Vet": "💉"
+      }
+    },
+    {
+      "name": "Other",
+      "subcategories": [
+        "Unclassified"
+      ],
+      "subcategoryHints": {
+        "Unclassified": "Use only when nothing else fits."
+      },
+      "emoji": "📦",
+      "subcategoryEmoji": {
+        "Unclassified": "❓"
+      }
+    },
+    {
+      "name": "Work",
+      "subcategories": [
+        "Coworking",
+        "Office Supplies"
+      ],
+      "emoji": "💼",
+      "hint": "Work-related spending: coworking, office supplies and printing.",
+      "subcategoryEmoji": {
+        "Coworking": "🏢",
+        "Office Supplies": "✏️"
+      },
+      "subcategoryHints": {
+        "Coworking": "Coworking space rent and day passes.",
+        "Office Supplies": "Pens, paper, notebooks, printing, photocopies and other stationery for work."
+      }
+    },
+    {
+      "name": "Education",
+      "subcategories": [
+        "Courses"
+      ],
+      "emoji": "🎓",
+      "hint": "Courses, classes and learning.",
+      "subcategoryEmoji": {
+        "Courses": "🏫"
+      },
+      "subcategoryHints": {
+        "Courses": "Language and other courses, classes and tuition."
+      }
+    }
+  ],
+  "expenses": [
+    {
+      "id": "8808dd9a-d8c2-56d8-b17c-0e51c4a60150",
+      "date": "2026-07-01",
+      "merchant": "Sample Landlord",
+      "amount": 950,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Rent",
+      "notes": "Monthly rent",
+      "enteredDate": "2026-07-01",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "515c767b-6556-5c60-a5d5-2199ed3c6893",
+      "date": "2026-07-02",
+      "merchant": "Sample Market",
+      "amount": 28.94,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-07-02",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "d1efc53f-a7b9-5a99-a04d-07a880503523",
+      "date": "2026-07-03",
+      "merchant": "Sample Energy Co.",
+      "amount": 59.01,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Electricity",
+      "notes": "",
+      "enteredDate": "2026-07-03",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "97a79ca7-efa2-541d-8cba-09ae96d6f7a4",
+      "date": "2026-07-04",
+      "merchant": "Sample Café",
+      "amount": 8.46,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-07-04",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "eb02693e-f167-5274-bc4d-53479a6d2572",
+      "date": "2026-07-05",
+      "merchant": "Sample Telecom",
+      "amount": 29.9,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Internet",
+      "notes": "",
+      "enteredDate": "2026-07-05",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e785700a-ae5d-5941-99f1-9f451e32e5fd",
+      "date": "2026-07-06",
+      "merchant": "Sample Market",
+      "amount": 51.94,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-07-06",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "a38ecdad-b2f5-58fd-ab35-354fb19aab82",
+      "date": "2026-07-08",
+      "merchant": "Sample Streaming",
+      "amount": 9.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Streaming",
+      "notes": "Monthly plan",
+      "enteredDate": "2026-07-08",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "7f7c75f2-2249-5cae-b77d-d151a56f60be",
+      "date": "2026-07-09",
+      "merchant": "Sample Cloud",
+      "amount": 2.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Cloud Storage",
+      "notes": "",
+      "enteredDate": "2026-07-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "f1704af9-2a70-5d8d-a6ea-0e7a093d4af6",
+      "date": "2026-07-10",
+      "merchant": "Sample Market",
+      "amount": 25.33,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-07-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "6dff0170-9bc1-539d-b6f5-6917eef31946",
+      "date": "2026-07-11",
+      "merchant": "Sample Café",
+      "amount": 3.22,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-07-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "dd6ffa31-f17a-5abe-a870-22a0c92c643b",
+      "date": "2026-07-12",
+      "merchant": "Sample Bistro",
+      "amount": 36.66,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Dinner",
+      "enteredDate": "2026-07-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "d83fee45-2606-58f4-838a-086481d21994",
+      "date": "2026-07-14",
+      "merchant": "Sample Market",
+      "amount": 46.65,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-07-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "eaf36707-fdc4-5460-81bb-325050fe7d80",
+      "date": "2026-07-16",
+      "merchant": "Corner Bakery",
+      "amount": 5.51,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-07-16",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "9900edc7-d326-5096-830a-55c8b87ba881",
+      "date": "2026-07-17",
+      "merchant": "Sample Cinema",
+      "amount": 14.5,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Cinema & Events",
+      "notes": "2 tickets",
+      "enteredDate": "2026-07-17",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "a05c26f3-578e-51a3-9669-76b325eaad68",
+      "date": "2026-07-18",
+      "merchant": "Sample Market",
+      "amount": 38.82,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-07-18",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "803b64c7-ca61-5d5e-b605-bf0cebddd61f",
+      "date": "2026-07-20",
+      "merchant": "Sample Gym",
+      "amount": 35,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Fitness",
+      "notes": "Monthly membership",
+      "enteredDate": "2026-07-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e130229e-fb18-5af6-aa68-76f61ed1fecc",
+      "date": "2026-08-01",
+      "merchant": "Sample Landlord",
+      "amount": 950,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Rent",
+      "notes": "Monthly rent",
+      "enteredDate": "2026-08-01",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e4cfc13c-9ada-5969-b124-a0866871dbc8",
+      "date": "2026-08-02",
+      "merchant": "Sample Market",
+      "amount": 24.72,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-08-02",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "c3025821-3b5e-5446-85b4-0b9f12e362f2",
+      "date": "2026-08-03",
+      "merchant": "Sample Energy Co.",
+      "amount": 66.74,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Electricity",
+      "notes": "",
+      "enteredDate": "2026-08-03",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "d6294a5d-d54d-55a8-bef3-f6ccc8e18cf0",
+      "date": "2026-08-04",
+      "merchant": "Sample Café",
+      "amount": 6.46,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-08-04",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "94bda4f5-030f-5658-810b-10d34ca3c816",
+      "date": "2026-08-05",
+      "merchant": "Sample Telecom",
+      "amount": 29.9,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Internet",
+      "notes": "",
+      "enteredDate": "2026-08-05",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "597c9ffc-2f5b-5a57-b0af-031d0e990d7b",
+      "date": "2026-08-06",
+      "merchant": "Sample Market",
+      "amount": 48.01,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-08-06",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "48865c0d-2319-5bf7-ac24-427470c028e3",
+      "date": "2026-08-08",
+      "merchant": "Sample Streaming",
+      "amount": 9.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Streaming",
+      "notes": "Monthly plan",
+      "enteredDate": "2026-08-08",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "c1cce04a-9ffa-5bf2-b1ad-80d9a47f5581",
+      "date": "2026-08-09",
+      "merchant": "Sample Cloud",
+      "amount": 2.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Cloud Storage",
+      "notes": "",
+      "enteredDate": "2026-08-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "800568d0-0763-5882-b4ad-02ebef328bef",
+      "date": "2026-08-10",
+      "merchant": "Sample Market",
+      "amount": 65.58,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-08-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "f5355cc0-6ed9-52da-af67-f2c75b7653b7",
+      "date": "2026-08-11",
+      "merchant": "Corner Bakery",
+      "amount": 3.3,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-08-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e65c0153-9d39-5a92-ab57-8db0b4d311f4",
+      "date": "2026-08-12",
+      "merchant": "Sample Bistro",
+      "amount": 58.9,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Dinner",
+      "enteredDate": "2026-08-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "00506c63-70a0-525a-b484-db4b172ae538",
+      "date": "2026-08-14",
+      "merchant": "Sample Market",
+      "amount": 51.01,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-08-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "6c609d5e-2601-532e-bab0-7384840d11b8",
+      "date": "2026-08-14",
+      "merchant": "Sample Pharmacy",
+      "amount": 12.4,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Medication",
+      "notes": "",
+      "enteredDate": "2026-08-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "ee0462c3-4904-5a82-833e-56cabf976b6e",
+      "date": "2026-08-16",
+      "merchant": "Sample Café",
+      "amount": 3.28,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-08-16",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "103e9165-bd2e-556e-b3a0-a96d079d819d",
+      "date": "2026-08-17",
+      "merchant": "Sample Cinema",
+      "amount": 14.5,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Cinema & Events",
+      "notes": "2 tickets",
+      "enteredDate": "2026-08-17",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "b57996a5-7e3b-5117-9501-99113233118f",
+      "date": "2026-08-18",
+      "merchant": "Sample Market",
+      "amount": 48.82,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-08-18",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "47750c52-8f32-5ee4-8a8b-1e2bec68a308",
+      "date": "2026-08-20",
+      "merchant": "Sample Gym",
+      "amount": 35,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Fitness",
+      "notes": "Monthly membership",
+      "enteredDate": "2026-08-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "569309c4-a05b-534e-9fdf-dd5043a0a464",
+      "date": "2026-09-01",
+      "merchant": "Sample Landlord",
+      "amount": 950,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Rent",
+      "notes": "Monthly rent",
+      "enteredDate": "2026-09-01",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "ae6a2071-a122-524e-88d3-8ba7f7762755",
+      "date": "2026-09-02",
+      "merchant": "Sample Market",
+      "amount": 28.64,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-09-02",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "24f6b9e2-33c7-5c8e-8d56-3e59f5bece13",
+      "date": "2026-09-03",
+      "merchant": "Sample Energy Co.",
+      "amount": 57.85,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Electricity",
+      "notes": "",
+      "enteredDate": "2026-09-03",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "74830d69-fef1-5aad-8463-44473d0c7109",
+      "date": "2026-09-04",
+      "merchant": "Sample Café",
+      "amount": 5.23,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-09-04",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "27522e17-0059-5536-b38f-4919b9966ff7",
+      "date": "2026-09-05",
+      "merchant": "Sample Telecom",
+      "amount": 29.9,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Internet",
+      "notes": "",
+      "enteredDate": "2026-09-05",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "80b7481a-93df-5747-896b-5f1bb598d858",
+      "date": "2026-09-06",
+      "merchant": "Sample Market",
+      "amount": 27.42,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-09-06",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "17747799-ebbe-5a92-84a7-dda104bdab0b",
+      "date": "2026-09-08",
+      "merchant": "Sample Streaming",
+      "amount": 9.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Streaming",
+      "notes": "Monthly plan",
+      "enteredDate": "2026-09-08",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "43bf3bf0-ce15-58dc-ae2f-775cedb1563c",
+      "date": "2026-09-09",
+      "merchant": "Sample Cloud",
+      "amount": 2.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Cloud Storage",
+      "notes": "",
+      "enteredDate": "2026-09-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e558b2a0-f2d0-5638-bf9e-46d6c5b9d827",
+      "date": "2026-09-10",
+      "merchant": "Sample Market",
+      "amount": 36.19,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-09-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "57f76635-7da4-52d6-a191-bc42d5ab3ee7",
+      "date": "2026-09-11",
+      "merchant": "Sample Café",
+      "amount": 6.39,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-09-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "48773958-1e97-5ac2-bc08-606f80c1f67b",
+      "date": "2026-09-12",
+      "merchant": "Sample Bistro",
+      "amount": 47.14,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Dinner",
+      "enteredDate": "2026-09-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "42ecd4c0-5013-56e5-99ef-91a09b7e4f14",
+      "date": "2026-09-14",
+      "merchant": "Sample Market",
+      "amount": 59.54,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-09-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "b5938451-7d05-56e7-ae44-768c9ac93de2",
+      "date": "2026-09-16",
+      "merchant": "Sample Café",
+      "amount": 5.98,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-09-16",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "fb2db9ca-5a88-54f1-bca7-29864b43983d",
+      "date": "2026-09-17",
+      "merchant": "Sample Cinema",
+      "amount": 14.5,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Cinema & Events",
+      "notes": "2 tickets",
+      "enteredDate": "2026-09-17",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "57b55974-badb-5df2-8f3c-6b2fc88fcc87",
+      "date": "2026-09-18",
+      "merchant": "Sample Market",
+      "amount": 30.31,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-09-18",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "a6bf0932-6bea-5217-933b-131f2353a40b",
+      "date": "2026-09-19",
+      "merchant": "Sample Airline",
+      "amount": 96.4,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Transport Tickets",
+      "notes": "Return flight, Porto",
+      "enteredDate": "2026-09-19",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-porto"
+    },
+    {
+      "id": "bdcf7a5d-cb36-538e-9609-05cac8719589",
+      "date": "2026-09-19",
+      "merchant": "Sample Hostel",
+      "amount": 132,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Accommodation",
+      "notes": "2 nights",
+      "enteredDate": "2026-09-19",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-porto"
+    },
+    {
+      "id": "d733f56e-82be-566c-ae67-49cdf22a8299",
+      "date": "2026-09-20",
+      "merchant": "Sample Gym",
+      "amount": 35,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Fitness",
+      "notes": "Monthly membership",
+      "enteredDate": "2026-09-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "42811578-c0c4-5181-b2b0-08ca9abdb0aa",
+      "date": "2026-09-20",
+      "merchant": "Sample Tavern",
+      "amount": 34.2,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Lunch",
+      "enteredDate": "2026-09-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-porto"
+    },
+    {
+      "id": "2057f5a0-ffd1-5b84-8a00-2fb3cdb8e246",
+      "date": "2026-09-20",
+      "merchant": "Sample Winery",
+      "amount": 28,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Activities & Sightseeing",
+      "notes": "Tour and tasting",
+      "enteredDate": "2026-09-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-porto"
+    },
+    {
+      "id": "19306c91-76ae-5957-af59-bbe14d081990",
+      "date": "2026-09-21",
+      "merchant": "Sample Supermarket",
+      "amount": 11.3,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Travel Groceries",
+      "notes": "Water, fruit",
+      "enteredDate": "2026-09-21",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-porto"
+    },
+    {
+      "id": "f41f0b0e-0272-5cd5-841b-de03bf77adf2",
+      "date": "2026-10-01",
+      "merchant": "Sample Landlord",
+      "amount": 950,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Rent",
+      "notes": "Monthly rent",
+      "enteredDate": "2026-10-01",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "35c81b14-7b3b-522b-a679-7ae723585282",
+      "date": "2026-10-02",
+      "merchant": "Sample Market",
+      "amount": 43.42,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-10-02",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "56307646-808e-5ee7-b254-5d0a21dc7bcf",
+      "date": "2026-10-03",
+      "merchant": "Sample Energy Co.",
+      "amount": 74.43,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Electricity",
+      "notes": "",
+      "enteredDate": "2026-10-03",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "82102afc-8d68-57af-b8bd-fb2cd9d72ac3",
+      "date": "2026-10-04",
+      "merchant": "Sample Café",
+      "amount": 3.49,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-10-04",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "b5a0112d-ba6c-5f76-aaee-8e3856fdd1a6",
+      "date": "2026-10-05",
+      "merchant": "Sample Telecom",
+      "amount": 29.9,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Internet",
+      "notes": "",
+      "enteredDate": "2026-10-05",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "baca4010-01f9-5ef8-840f-bb4e93b004d5",
+      "date": "2026-10-06",
+      "merchant": "Sample Market",
+      "amount": 64.48,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-10-06",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "90c9a631-7086-5f59-90ba-65a6ddf023c3",
+      "date": "2026-10-08",
+      "merchant": "Sample Streaming",
+      "amount": 9.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Streaming",
+      "notes": "Monthly plan",
+      "enteredDate": "2026-10-08",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "bd87724c-8a41-537f-b562-c3fd3136a1eb",
+      "date": "2026-10-09",
+      "merchant": "Sample Cloud",
+      "amount": 2.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Cloud Storage",
+      "notes": "",
+      "enteredDate": "2026-10-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "8eb846f5-92e3-5031-8890-9de3b3bbadbd",
+      "date": "2026-10-09",
+      "merchant": "Sample Airline",
+      "amount": 118.6,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Transport Tickets",
+      "notes": "Return flight, Lisbon",
+      "enteredDate": "2026-10-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "e9327c9f-8b04-5d76-9c9e-1349b7bfc62c",
+      "date": "2026-10-09",
+      "merchant": "Sample Hotel",
+      "amount": 240,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Accommodation",
+      "notes": "3 nights",
+      "enteredDate": "2026-10-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "88746eae-e1d0-5e39-bc79-1bf35e519411",
+      "date": "2026-10-10",
+      "merchant": "Sample Market",
+      "amount": 38.63,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-10-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "a1700a3f-a437-54fb-afb6-84d182800416",
+      "date": "2026-10-10",
+      "merchant": "Sample Tavern",
+      "amount": 31.5,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Lunch",
+      "enteredDate": "2026-10-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "8737f818-9fe5-5111-97d7-08ba9ea6dae6",
+      "date": "2026-10-11",
+      "merchant": "Corner Bakery",
+      "amount": 6.15,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-10-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "5bf49b75-70f7-5aad-b446-37d4c091cd19",
+      "date": "2026-10-11",
+      "merchant": "Sample Museum",
+      "amount": 18,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Activities & Sightseeing",
+      "notes": "2 tickets",
+      "enteredDate": "2026-10-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "c8fe9cf7-03d7-58ec-b489-fd6e330eb041",
+      "date": "2026-10-11",
+      "merchant": "Sample Rideshare",
+      "amount": 14.8,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Vehicle",
+      "notes": "Airport ride",
+      "enteredDate": "2026-10-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "745fd562-aee1-59be-9088-299d3cf33ba9",
+      "date": "2026-10-12",
+      "merchant": "Sample Bistro",
+      "amount": 38.37,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Dinner",
+      "enteredDate": "2026-10-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "7c51e678-b159-5f18-8390-4b6fbedaadd7",
+      "date": "2026-10-12",
+      "merchant": "Sample Café",
+      "amount": 7.2,
+      "currency": "EUR",
+      "category": "Travel",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-10-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      },
+      "tripId": "trip-sample-lisbon"
+    },
+    {
+      "id": "150eb441-c563-554e-be05-3668e097c812",
+      "date": "2026-10-14",
+      "merchant": "Sample Market",
+      "amount": 33.43,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-10-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "d39d02fb-3045-568c-a384-29f07430822a",
+      "date": "2026-10-16",
+      "merchant": "Corner Bakery",
+      "amount": 7.38,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-10-16",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "b94a7dee-09ee-5360-91f1-4155cc0790d0",
+      "date": "2026-10-17",
+      "merchant": "Sample Cinema",
+      "amount": 14.5,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Cinema & Events",
+      "notes": "2 tickets",
+      "enteredDate": "2026-10-17",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "69eb85e6-9212-5da8-8418-511d0b4a98e3",
+      "date": "2026-10-18",
+      "merchant": "Sample Market",
+      "amount": 30.27,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-10-18",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "f3ebec58-9037-5016-9b9c-f6de174d1c20",
+      "date": "2026-10-20",
+      "merchant": "Sample Gym",
+      "amount": 35,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Fitness",
+      "notes": "Monthly membership",
+      "enteredDate": "2026-10-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "7b706514-69d8-5244-940c-3ca2b6eea6cb",
+      "date": "2026-10-22",
+      "merchant": "Sample Bookshop",
+      "amount": 21.9,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Books",
+      "notes": "",
+      "enteredDate": "2026-10-22",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "07c18ba9-a31e-50ae-9e63-dd495219332e",
+      "date": "2026-11-01",
+      "merchant": "Sample Landlord",
+      "amount": 950,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Rent",
+      "notes": "Monthly rent",
+      "enteredDate": "2026-11-01",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "35f1374b-b890-5d82-a100-c0167c245de8",
+      "date": "2026-11-02",
+      "merchant": "Sample Market",
+      "amount": 27.43,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-11-02",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "58c9409f-da7f-59e8-b5f0-5682524d581e",
+      "date": "2026-11-03",
+      "merchant": "Sample Energy Co.",
+      "amount": 81.33,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Electricity",
+      "notes": "",
+      "enteredDate": "2026-11-03",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "bed18f71-2a2a-54d3-a76d-604c9667b70d",
+      "date": "2026-11-04",
+      "merchant": "Sample Café",
+      "amount": 8.77,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-11-04",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "3366c3b5-4b18-54fa-9441-cf4414a31102",
+      "date": "2026-11-05",
+      "merchant": "Sample Telecom",
+      "amount": 29.9,
+      "currency": "EUR",
+      "category": "Housing",
+      "subcategory": "Internet",
+      "notes": "",
+      "enteredDate": "2026-11-05",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "2162f19b-d224-50bd-bc74-a1652e8e92d2",
+      "date": "2026-11-06",
+      "merchant": "Sample Market",
+      "amount": 41.23,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-11-06",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "01ecdc87-593d-5b5e-9cca-a7bdb42bdb0c",
+      "date": "2026-11-08",
+      "merchant": "Sample Streaming",
+      "amount": 9.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Streaming",
+      "notes": "Monthly plan",
+      "enteredDate": "2026-11-08",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "4d3bb780-9968-5c22-9193-027b29fa97b2",
+      "date": "2026-11-09",
+      "merchant": "Sample Cloud",
+      "amount": 2.99,
+      "currency": "EUR",
+      "category": "Subscriptions & Digital Services",
+      "subcategory": "Cloud Storage",
+      "notes": "",
+      "enteredDate": "2026-11-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "74c49b49-da47-5b8e-8d25-e6433f883465",
+      "date": "2026-11-09",
+      "merchant": "Sample Dentist",
+      "amount": 85,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Dentist",
+      "notes": "Check-up",
+      "enteredDate": "2026-11-09",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "4e331f84-ecb4-5018-a3d3-eb9f10b4b6f2",
+      "date": "2026-11-10",
+      "merchant": "Sample Market",
+      "amount": 56.83,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-11-10",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "e57f2983-0de8-5045-b242-3eca173df43d",
+      "date": "2026-11-11",
+      "merchant": "Sample Café",
+      "amount": 7.59,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-11-11",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "6c742fe8-add9-5a23-8ef4-1cba43c8110c",
+      "date": "2026-11-12",
+      "merchant": "Sample Bistro",
+      "amount": 40.61,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants",
+      "notes": "Dinner",
+      "enteredDate": "2026-11-12",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "f7b00b13-5516-5d22-aa36-e03af0b1cdf4",
+      "date": "2026-11-14",
+      "merchant": "Sample Market",
+      "amount": 28.99,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-11-14",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "3b3da9a7-8696-569e-90ba-346b2efaaf0c",
+      "date": "2026-11-16",
+      "merchant": "Corner Bakery",
+      "amount": 5.04,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Cafés & Snacks",
+      "notes": "",
+      "enteredDate": "2026-11-16",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "edc5c300-1e58-5d7e-8c3a-69e906c85f2e",
+      "date": "2026-11-17",
+      "merchant": "Sample Cinema",
+      "amount": 14.5,
+      "currency": "EUR",
+      "category": "Leisure & Entertainment",
+      "subcategory": "Cinema & Events",
+      "notes": "2 tickets",
+      "enteredDate": "2026-11-17",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "6929c9ab-fea4-54d4-919d-2213241f6f7b",
+      "date": "2026-11-18",
+      "merchant": "Sample Market",
+      "amount": 44.49,
+      "currency": "EUR",
+      "category": "Food",
+      "subcategory": "Groceries",
+      "notes": "Items: milk, bread, vegetables, eggs",
+      "enteredDate": "2026-11-18",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    },
+    {
+      "id": "626f2605-d0af-5a2a-b2cb-57ee225f5681",
+      "date": "2026-11-20",
+      "merchant": "Sample Gym",
+      "amount": 35,
+      "currency": "EUR",
+      "category": "Health",
+      "subcategory": "Fitness",
+      "notes": "Monthly membership",
+      "enteredDate": "2026-11-20",
+      "createdAt": "2026-01-01T00:00:00Z",
+      "updatedAt": "2026-01-01T00:00:00Z",
+      "source": {
+        "origin": "manual-import"
+      }
+    }
+  ],
+  "promptRoles": {
+    "bar_restaurant": {
+      "category": "Leisure & Entertainment",
+      "subcategory": "Bars & Restaurants"
+    },
+    "cafe": {
+      "category": "Food",
+      "subcategory": "Cafés & Snacks"
+    },
+    "groceries": {
+      "category": "Food",
+      "subcategory": "Groceries"
+    },
+    "alcohol": {
+      "category": "Leisure & Entertainment",
+      "subcategory": "Alcoholic Drinks"
+    },
+    "toiletries": {
+      "category": "Personal Shopping",
+      "subcategory": "Hygiene & Beauty"
+    },
+    "cleaning": {
+      "category": "Housing",
+      "subcategory": "Cleaning Supplies"
+    },
+    "unclassified": {
+      "category": "Other",
+      "subcategory": "Unclassified"
+    },
+    "travel": {
+      "category": "Travel",
+      "subcategory": ""
+    },
+    "travel_bar_restaurant": {
+      "category": "Travel",
+      "subcategory": "Bars & Restaurants"
+    },
+    "travel_cafe": {
+      "category": "Travel",
+      "subcategory": "Cafés & Snacks"
+    },
+    "travel_groceries": {
+      "category": "Travel",
+      "subcategory": "Travel Groceries"
+    },
+    "travel_alcohol": {
+      "category": "Travel",
+      "subcategory": "Alcoholic Drinks"
+    },
+    "travel_vehicle": {
+      "category": "Travel",
+      "subcategory": "Vehicle"
+    },
+    "taxi": {
+      "category": "Transport",
+      "subcategory": "Taxi & Rideshare"
+    }
+  },
+  "settings": {
+    "homeCity": "London"
+  },
+  "trips": [
+    {
+      "id": "trip-sample-lisbon",
+      "name": "Lisbon weekend, October 2026",
+      "city": "Lisbon",
+      "country": "Portugal",
+      "start": "2026-10-09",
+      "end": "2026-10-12"
+    },
+    {
+      "id": "trip-sample-porto",
+      "name": "Porto weekend, September 2026",
+      "city": "Porto",
+      "country": "Portugal",
+      "start": "2026-09-19",
+      "end": "2026-09-21"
+    }
+  ]
+}

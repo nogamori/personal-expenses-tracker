@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Personal Expenses</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M8 21h4v-6H8zm6 0h4V9h-4zm6 0h4v-9h-4z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="bar-row">
+    <div class="brand"><h1>Personal Expenses</h1><p class="byline"><span id="appVersion"></span>by <a href="https://github.com/nogamori/personal-expenses-tracker" target="_blank" rel="noopener noreferrer">nogamori</a></p></div>
+    <div class="seg viewtabs" role="group" aria-label="Views"><button type="button" data-tab="dash" aria-pressed="true">📊 Dashboard</button><button type="button" data-tab="trips" aria-pressed="false">🧳 Trips</button><button type="button" data-tab="data" aria-pressed="false">🗂️ Data</button><button type="button" data-tab="settings" aria-pressed="false">⚙️ Settings</button></div>
+    <div class="period" role="group" aria-label="Period">
+      <div class="seg" role="group" aria-label="Period type" id="modeSeg">
+        <button type="button" data-mode="month">Month</button>
+        <button type="button" data-mode="year">Year</button>
+        <button type="button" data-mode="all">All time</button>
+        <button type="button" data-mode="custom">Custom</button>
+      </div>
+      <div class="pickers" id="pickers"></div>
+    </div>
+    <div class="topbar-actions">
+      <div class="undowrap"><button class="btn sm" id="btnUndo" type="button" aria-haspopup="menu" aria-expanded="false" disabled title="Nothing to undo yet">↩️ Undo</button>
+        <div id="undoMenu" class="undomenu" role="menu" aria-label="Recent actions" hidden></div></div>
+      <button class="btn sm primary" id="btnAdd" type="button">➕ Add expense</button>
+    </div>
+  </div>
+  <div class="filters" role="search" aria-label="Filters">
+    <label class="field grow"><span class="sr">Search</span><input type="search" id="fSearch" placeholder="Search merchant, notes, category, amount…" autocomplete="off"></label>
+    <label class="field"><span class="sr">Category</span><select id="fCategory"></select></label>
+    <label class="field"><span class="sr">Subcategory</span><select id="fSub"></select></label>
+    <label class="field"><span class="sr">Merchant</span><input id="fMerchant" list="merchantList" placeholder="Any merchant" autocomplete="off"></label>
+    <label class="field" id="fCurrencyWrap" hidden><span class="sr">Currency</span><select id="fCurrency"></select></label>
+    <button class="clearbtn" id="btnClear" type="button">Clear filters</button>
+  </div>
+</header>
+
+<main>
+  <div id="banner" role="status" aria-live="polite"></div>
+
+  <div class="layout" id="dashView">
+    <aside class="side" aria-label="Summary and charts">
+      <article class="card" id="cardTrips" hidden></article>
+      <section id="summary" class="summary" aria-label="Summary"></section>
+      <article class="card" id="cardCats"></article>
+      <article class="card" id="cardTrend"></article>
+      <article class="card" id="cardSched" hidden></article>
+    </aside>
+    <section class="card tablecol" id="cardTable" aria-label="Expenses"></section>
+  </div>
+  <section class="card" id="dataView" aria-label="Data" hidden></section>
+  <section class="card" id="settingsView" aria-label="Settings" hidden></section>
+</main>
+
+<datalist id="merchantList"></datalist>
+<datalist id="merchantListAll"></datalist>
+<dialog id="detail" class="sheet"></dialog>
+<dialog id="formDlg" class="modal"></dialog>
+<dialog id="confirmDlg" class="modal small"></dialog>
+<dialog id="askDlg" class="modal small"></dialog>
+<dialog id="toolDlg" class="modal"></dialog>
+<dialog id="receiptDlg" class="rcview" aria-label="Receipt"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="tip" role="tooltip" hidden></div>
+<script src="app.js"></script>
+<script src="data-view.js"></script>
+<script src="settings.js"></script>
+<script src="trips.js"></script>
+</body>
+</html>

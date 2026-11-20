@@ -1,0 +1,17 @@
+# Your data never goes to Git
+data/*
+!data/.gitkeep
+Receipts/*
+!Receipts/.gitkeep
+Inbox/*
+!Inbox/.gitkeep
+Mobile/
+# A personal receipt prompt (the shared one is prompts/receipt-prompt.template.md)
+prompts/*.personal.md
+# Secrets and system files
+api_key*
+*.key
+.env
+.DS_Store
+__pycache__/
+*.pyc

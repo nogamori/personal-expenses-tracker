@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Personal Expenses</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f4f4f2; --surface: #fcfcfb; --surface-2: #f0f0ed; --line: #e1e0db; --track: #e4e3dd;
+  --text: #0b0b0b; --text-2: #52514e; --text-3: #7b7a74;
+  --accent: #2a78d6; --accent-ink: #ffffff; --danger: #c0392b; --ok: #1d7a4d;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111110; --surface: #1a1a19; --surface-2: #242423; --line: #333331; --track: #353533;
+    --text: #ffffff; --text-2: #c3c2b7; --text-3: #8f8e86; --accent: #3987e5; --danger: #ef7b6e; --ok: #5cc596;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+main { max-width: 640px; margin: 0 auto; padding: 14px 16px 60px; display: grid; gap: 12px; }
+button, input, select { font: inherit; color: inherit; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+h1 { margin: 0; font-size: 18px; font-weight: 650; }
+.muted { color: var(--text-2); } .small { font-size: 12.5px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; padding: 9px 4px; font-weight: 500; }
+.seg button + button { border-left: 1px solid var(--line); }
+[hidden] { display: none !important; }
+.seg.two { grid-template-columns: repeat(2, 1fr); }
+.seg button.on { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.nav { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; text-align: center; font-weight: 600; }
+.nav button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; height: 40px; font-size: 18px; }
+.nav button:disabled { opacity: .35; }
+.filters { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+.filters input[type=search] { grid-column: 1 / -1; }
+.filters input, .filters select { width: 100%; min-width: 0; font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.clear { grid-column: 1 / -1; justify-self: end; border: 0; background: none; color: var(--danger); font-size: 13px; padding: 2px 4px; }
+.total { text-align: center; }
+.trip { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1px 10px; padding: 11px 0; border-top: 1px solid var(--line); width: 100%; text-align: left; background: none; border-left: 0; border-right: 0; border-bottom: 0; color: inherit; font: inherit; }
+.trip:first-of-type { border-top: 0; }
+.trip .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.trip .am { text-align: right; font-variant-numeric: tabular-nums; font-weight: 560; }
+.trip .meta { grid-column: 1 / -1; color: var(--text-2); font-size: 12.5px; }
+.trip.dim { opacity: .55; }
+.yr { margin: 10px 0 2px; font-size: 12.5px; font-weight: 650; color: var(--text-2); }
+.back { border: 0; background: none; color: var(--accent); padding: 4px 0 8px; font-size: 15px; }
+.total .big { font-size: 32px; font-weight: 700; letter-spacing: -.5px; }
+.sect { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.sect h2 { margin: 0; font-size: 14px; font-weight: 650; }
+.bar { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 0; border-top: 1px solid var(--line); width: 100%; text-align: left; background: none; border-left: 0; border-right: 0; border-bottom: 0; }
+.bar:first-of-type { border-top: 0; }
+.bar .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar .am { text-align: right; font-variant-numeric: tabular-nums; }
+.bar .track { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--track); overflow: hidden; }
+.bar .fill { height: 100%; background: var(--accent); border-radius: 3px; }
+.row { display: grid; grid-template-columns: 1fr auto; gap: 1px 10px; padding: 10px 0; border-top: 1px solid var(--line); width: 100%; text-align: left; background: none; border-left: 0; border-right: 0; border-bottom: 0; }
+.row:first-of-type { border-top: 0; }
+.row .mer { font-weight: 560; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .amt { text-align: right; font-variant-numeric: tabular-nums; font-weight: 560; }
+.row .sub { color: var(--text-2); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.row .dt { color: var(--text-3); font-size: 12.5px; text-align: right; }
+.neg { color: var(--ok); }
+.more { width: 100%; padding: 11px; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; margin-top: 8px; }
+.empty { text-align: center; color: var(--text-2); padding: 26px 8px; }
+dialog { border: 0; border-radius: 16px; padding: 0; width: min(92vw, 520px); max-height: 85vh; background: var(--surface); color: var(--text); }
+dialog::backdrop { background: rgba(0,0,0,.45); }
+.dlg { padding: 18px 18px 14px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.dlg h3 { margin: 0; font-size: 18px; }
+.kv { display: grid; grid-template-columns: 92px 1fr; gap: 6px 10px; margin: 0; font-size: 14px; }
+.kv dt { color: var(--text-2); } .kv dd { margin: 0; overflow-wrap: anywhere; }
+.notes { white-space: pre-wrap; background: var(--surface-2); border-radius: 10px; padding: 10px; font-size: 14px; }
+.btn { display: block; text-align: center; text-decoration: none; padding: 11px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); border-radius: 10px; font-weight: 600; }
+.btn.ghost { background: var(--surface); color: var(--text); border-color: var(--line); }
+.btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+button.btn { font-size: 15px; }
+.actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.pendingnote { background: var(--surface-2); border-radius: 10px; padding: 10px; font-size: 13.5px; }
+.badge { font-size: 11.5px; font-weight: 500; color: var(--text-2); background: var(--surface-2); border-radius: 999px; padding: 1px 7px; margin-left: 6px; }
+dialog { overflow: auto; }
+.form { display: grid; gap: 10px; }
+.form label { display: grid; gap: 3px; min-width: 0; font-size: 12.5px; color: var(--text-2); }
+.form input, .form select, .form textarea { display: block; width: 100%; min-width: 0; max-width: 100%; font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); -webkit-appearance: none; appearance: none; }
+.form input, .form select { height: 44px; line-height: 1.2; }
+/* iOS draws a date field wider than its box and centres the text unless told otherwise */
+.form input[type=date] { text-align: left; }
+.form input[type=date]::-webkit-date-and-time-value { text-align: left; min-height: 1.2em; }
+.form select { padding-right: 28px; background-image: linear-gradient(45deg, transparent 50%, var(--text-2) 50%), linear-gradient(135deg, var(--text-2) 50%, transparent 50%); background-position: calc(100% - 17px) 50%, calc(100% - 12px) 50%; background-size: 5px 5px; background-repeat: no-repeat; }
+.form textarea { min-height: 84px; resize: vertical; }
+.form .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.err { color: var(--danger); font-size: 13.5px; }
+.warn { color: var(--danger); font-size: 13px; }
+.instrow { display: grid; grid-template-columns: 30px minmax(0, 1.5fr) minmax(0, 1fr); gap: 6px; align-items: center; }
+.instrow input { padding: 9px 6px; }
+.instrow .n { color: var(--text-2); font-size: 13px; }
+.toast { position: fixed; left: 12px; right: 12px; bottom: calc(14px + env(safe-area-inset-bottom)); background: var(--text); color: var(--bg); padding: 11px 14px; border-radius: 12px; font-size: 14px; z-index: 50; }
+.close { padding: 11px; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><h1>Personal Expenses</h1><span class="muted small" id="stamp"></span></div>
+  <div class="seg two" id="view"><button data-v="exp">Expenses</button><button data-v="trips">🧳 Trips</button></div>
+  <div class="seg" id="mode"><button data-m="month">Month</button><button data-m="year">Year</button><button data-m="all">All time</button></div>
+  <div class="nav" id="nav"><button id="prev" aria-label="Previous">‹</button><div id="label"></div><button id="next" aria-label="Next">›</button></div>
+  <div class="filters">
+    <input type="search" id="q" placeholder="Search merchant, notes, amount…" autocomplete="off">
+    <select id="cat" aria-label="Category"></select>
+    <select id="sub" aria-label="Subcategory"></select>
+    <button class="clear" id="clear" hidden>Clear filters</button>
+  </div>
+  <div class="card" id="tripsCard" hidden></div>
+  <div class="card" id="tripHead" hidden></div>
+  <div class="card total" id="total"></div>
+  <div class="card" id="cats"></div>
+  <div class="card" id="list"></div>
+</main>
+<dialog id="dlg"></dialog>
+<script>
+const DATA = /*DATA*/null;
+const rows = DATA.rows.map((r, i) => ({ i, date: r[0], merchant: r[1], amount: r[2], cur: r[3], cat: r[4], sub: r[5], notes: r[6], trip: r[7], inst: r[8], rec: r[9], id: r[10], upd: r[11], gid: r[12] }));
+const RECEIPT_SHORTCUT = 'Open Receipt';   // name of the Shortcut that opens a file from Expenses/Receipts
+const SHORTCUT_NAME = 'Expenses Mobile';   // the Shortcut that saves edit, delete and split requests in Expenses/Inbox
+const pending = new Map();                 // expense id -> what was sent; lives while this page stays open
+const emojiOf = Object.fromEntries(DATA.categories.map(c => [c.n, c.e || '']));
+const subEmoji = {}; DATA.categories.forEach(c => (c.subs || []).forEach(s => subEmoji[c.n + '|' + s[0]] = s[1] || ''));
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const pad = n => String(n).padStart(2, '0');
+const fmtDate = d => `${d.slice(8, 10)} ${MON[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}`;
+const money = (n, cur) => { try { return new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur }).format(n); } catch { return n.toFixed(2) + ' ' + cur; } };
+const alpha = (a, b) => a.localeCompare(b, 'en');
+const catLabel = c => ((emojiOf[c] || '') + ' ' + c).trim();
+const subLabel = (c, s) => ((subEmoji[c + '|' + s] || '') + ' ' + s).trim();
+const place = (c, s) => catLabel(c) + (s ? ' › ' + subLabel(c, s) : '');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const $ = id => document.getElementById(id);
+
+const months = [...new Set(rows.map(r => r.date.slice(0, 7)))].sort();
+const todayKey = new Date().toLocaleDateString('en-CA').slice(0, 7);
+const startKey = months.includes(todayKey) ? todayKey : (months.filter(m => m <= todayKey).pop() || months[months.length - 1] || todayKey);
+const S = { mode: 'month', y: +startKey.slice(0, 4), m: +startKey.slice(5, 7) - 1, q: '', cat: '', sub: '', limit: 60, view: 'exp', trip: '' };
+const mainCur = (() => { const c = {}; rows.forEach(r => c[r.cur] = (c[r.cur] || 0) + 1); return Object.entries(c).sort((a, b) => b[1] - a[1])[0]?.[0] || 'EUR'; })();
+
+const tripInfo = id => { const x = DATA.tripInfo?.[id]; return x ? { id, name: DATA.trips[id], start: x[0], end: x[1], city: x[2], country: x[3] } : null; };
+const daysBetween = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5) + 1;
+const inTripScope = r => S.trip === '*' ? !!(r.trip && DATA.trips[r.trip]) : r.trip === S.trip;
+const inPeriod = d => S.mode === 'all' || (S.mode === 'year' ? +d.slice(0, 4) === S.y : d.slice(0, 7) === `${S.y}-${pad(S.m + 1)}`);
+const matchQ = r => { if (!S.q) return true; const h = `${r.merchant} ${r.notes} ${r.cat} ${r.sub} ${r.amount} ${r.trip ? DATA.trips[r.trip] || '' : ''}`.toLowerCase(); return S.q.toLowerCase().split(/\s+/).every(w => h.includes(w)); };
+const sum = list => { const t = {}; list.forEach(r => t[r.cur] = (t[r.cur] || 0) + r.amount); return t; };
+
+function renderTrips() {
+  const trips = Object.keys(DATA.trips).map(tripInfo).filter(Boolean).sort((a, b) => b.start.localeCompare(a.start));
+  const by = {}; rows.forEach(r => { if (r.trip) (by[r.trip] = by[r.trip] || []).push(r); });
+  const all = Object.values(by).flat();
+  const tot = list => { const t = sum(list), o = Object.entries(t).filter(([c]) => c !== mainCur); return esc(money(t[mainCur] || 0, mainCur)) + (o.length ? ' <span class="muted small">+ ' + o.map(([c, v]) => esc(money(v, c))).join(' · ') + '</span>' : ''); };
+  let year = '', html = `<button class="trip" data-t="*"><span class="nm">🧳 All trips</span><span class="am">${tot(all)}</span><span class="meta">${trips.length} trips · ${all.length} expenses</span></button>`;
+  trips.forEach(t => {
+    const rs = by[t.id] || [], y = t.start.slice(0, 4);
+    if (y !== year) { year = y; html += `<div class="yr">${y}</div>`; }
+    html += `<button class="trip ${rs.length ? '' : 'dim'}" data-t="${esc(t.id)}"><span class="nm">${esc(t.name)}</span><span class="am">${rs.length ? tot(rs) : '—'}</span><span class="meta">${esc(fmtDate(t.start))}${t.end !== t.start ? ' – ' + esc(fmtDate(t.end)) : ''} · ${esc(t.city)}${rs.length ? ' · ' + rs.length : ' · no expenses yet'}</span></button>`;
+  });
+  $('tripsCard').innerHTML = `<div class="sect"><h2>Trips</h2><span class="muted small">tap a trip</span></div>` + (trips.length ? html : '<p class="muted">No trips yet.</p>');
+}
+
+function render() {
+  const tv = S.view === 'trips', picked = tv && S.trip;
+  document.querySelectorAll('#view button').forEach(b => b.classList.toggle('on', b.dataset.v === S.view));
+  $('mode').hidden = tv; $('tripsCard').hidden = !(tv && !picked); $('tripHead').hidden = !picked;
+  document.querySelector('.filters').hidden = tv && !picked; $('total').hidden = $('cats').hidden = $('list').hidden = tv && !picked;
+  if (tv && !picked) { $('nav').hidden = true; renderTrips(); return; }
+  if (picked) {
+    const t = S.trip === '*' ? null : tripInfo(S.trip), d = t ? daysBetween(t.start, t.end) : 0;
+    $('tripHead').innerHTML = `<button class="back" id="back">‹ All trips</button><div><strong>${t ? '🧳 ' + esc(t.name) : '🧳 All trips'}</strong></div>` +
+      (t ? `<div class="muted small">${esc(t.city)}${t.country ? ', ' + esc(t.country) : ''} · ${esc(fmtDate(t.start))} – ${esc(fmtDate(t.end))} · ${d} ${d === 1 ? 'day' : 'days'}</div>` : '<div class="muted small">The expenses of every trip.</div>');
+  }
+  document.querySelectorAll('#mode button').forEach(b => b.classList.toggle('on', b.dataset.m === S.mode));
+  $('nav').hidden = tv || S.mode === 'all';
+  const years = [...new Set(months.map(m => +m.slice(0, 4)))].sort();
+  $('label').textContent = S.mode === 'year' ? String(S.y) : `${MON[S.m]} ${S.y}`;
+  const keys = S.mode === 'year' ? years : months;
+  const cur = S.mode === 'year' ? S.y : `${S.y}-${pad(S.m + 1)}`;
+  $('prev').disabled = keys.indexOf(cur) <= 0; $('next').disabled = keys.indexOf(cur) >= keys.length - 1;
+
+  // category and subcategory selects (a subcategory can be chosen without choosing its category first)
+  const catSel = $('cat'), subSel = $('sub');
+  const cats = [...DATA.categories].sort((x, y) => alpha(x.n, y.n));
+  catSel.innerHTML = '<option value="">All categories</option>' + cats.map(c => `<option value="${esc(c.n)}"${S.cat === c.n ? ' selected' : ''}>${esc(catLabel(c.n))}</option>`).join('');
+  const subOpts = c => [...(c.subs || [])].sort((x, y) => alpha(x[0], y[0])).map(x => `<option value="${esc(c.n + '|' + x[0])}"${S.cat === c.n && S.sub === x[0] ? ' selected' : ''}>${esc(subLabel(c.n, x[0]))}</option>`).join('');
+  subSel.innerHTML = '<option value="">All subcategories</option>' + (S.cat
+    ? subOpts(DATA.categories.find(c => c.n === S.cat) || { subs: [] })
+    : cats.filter(c => (c.subs || []).length).map(c => `<optgroup label="${esc(catLabel(c.n))}">${subOpts(c)}</optgroup>`).join(''));
+  $('clear').hidden = !(S.q || S.cat || S.sub);
+
+  const base = rows.filter(r => (picked ? inTripScope(r) : inPeriod(r.date)) && matchQ(r));
+  const shown = base.filter(r => (!S.cat || r.cat === S.cat) && (!S.sub || r.sub === S.sub));
+  shown.sort((a, b) => b.date.localeCompare(a.date) || b.i - a.i);
+
+  // total
+  const t = sum(shown), other = Object.entries(t).filter(([c]) => c !== mainCur);
+  $('total').innerHTML = `<div class="muted small">Total spent · ${shown.length} ${shown.length === 1 ? 'entry' : 'entries'}</div>
+    <div class="big">${money(t[mainCur] || 0, mainCur)}</div>${picked && S.trip !== '*' ? (() => { const tt = tripInfo(S.trip), d = tt ? daysBetween(tt.start, tt.end) : 0; return d ? `<div class="muted small">${esc(money((t[mainCur] || 0) / d, mainCur))} per day</div>` : ''; })() : ''}${other.length ? `<div class="muted small">Other currencies: ${other.map(([c, v]) => esc(money(v, c))).join(' · ')}</div>` : ''}`;
+
+  // category breakdown (main currency only)
+  const mainRows = base.filter(r => r.cur === mainCur);
+  const group = S.cat ? mainRows.filter(r => r.cat === S.cat) : mainRows;
+  const g = {}; group.forEach(r => { const k = S.cat ? r.sub || '(none)' : r.cat; g[k] = (g[k] || 0) + r.amount; });
+  const ents = Object.entries(g).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+  const max = ents[0]?.[1] || 1, tot = ents.reduce((s, [, v]) => s + v, 0) || 1;
+  $('cats').innerHTML = `<div class="sect"><h2>${S.cat ? esc(S.cat) + ' by subcategory' : 'Spending by category'}</h2>${S.cat ? '<span class="muted small">tap to filter</span>' : '<span class="muted small">tap a category</span>'}</div>` +
+    (ents.length ? ents.map(([k, v]) => `<button class="bar" data-k="${esc(k)}"><span class="nm">${esc(S.cat ? subLabel(S.cat, k) : catLabel(k))}</span><span class="am">${esc(money(v, mainCur))} <span class="muted small">${Math.round(v / tot * 100)}%</span></span><span class="track"><span class="fill" style="display:block;width:${Math.max(2, v / max * 100)}%"></span></span></button>`).join('') : '<div class="empty">Nothing in this period.</div>');
+
+  // list
+  const part = shown.slice(0, S.limit);
+  $('list').innerHTML = `<div class="sect"><h2>Expenses</h2><span class="muted small">${shown.length} in total</span></div>` +
+    (part.length ? part.map(r => `<button class="row" data-i="${r.i}"><span class="mer">${esc(r.merchant)}${pending.has(r.id) ? '<span class="badge">⏳ sent</span>' : ''}</span><span class="amt ${r.amount < 0 ? 'neg' : ''}">${esc(money(r.amount, r.cur))}</span><span class="sub">${esc(place(r.cat, r.sub))}</span><span class="dt">${esc(fmtDate(r.date))}</span></button>`).join('') + (shown.length > part.length ? `<button class="more" id="more">Show more (${shown.length - part.length})</button>` : '') : '<div class="empty">No expenses match.</div>');
+}
+
+/* ---------- details, edit, delete and split ----------
+   The page cannot write files, so a change is sent as a small JSON request to your phone automation (or a file you save), which puts it in the Inbox folder.
+   The computer imports it and the next version of this page shows the result. `base` is the version of the expense this page knows;
+   the Mac refuses the change if the expense was changed there in the meantime. */
+const dlg = $('dlg');
+const lock = on => { dlg.dataset.locked = on ? '1' : ''; };   // forms ignore taps outside, so nothing typed is lost by accident
+const uid = () => { try { if (crypto.randomUUID) return crypto.randomUUID().replace(/-/g, '').slice(0, 24); } catch {} return Array.from({ length: 24 }, () => Math.floor(Math.random() * 36).toString(36)).join(''); };
+const validDate = d => /^\d{4}-\d{2}-\d{2}$/.test(d) && !isNaN(new Date(d + 'T12:00:00')) && new Date(d + 'T12:00:00').toISOString().slice(0, 10) === d;
+const parseAmount = v => { let t = String(v).trim().replace(/\s/g, ''); if (t.includes(',') && t.includes('.')) t = t.replace(/,/g, ''); else t = t.replace(',', '.'); if (!/^-?\d+(\.\d+)?$/.test(t)) return null; const n = Math.round(parseFloat(t) * 100) / 100; return n === 0 ? null : n; };
+const addMonths = (d, k) => { const y = +d.slice(0, 4), m = +d.slice(5, 7) - 1, day = +d.slice(8, 10); const t = new Date(Date.UTC(y, m + k, 1)); const last = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() + 1, 0)).getUTCDate(); return `${t.getUTCFullYear()}-${pad(t.getUTCMonth() + 1)}-${pad(Math.min(day, last))}`; };
+const tripOptions = sel => `<option value="">(none)</option>` + Object.entries(DATA.trips).sort((x, y) => alpha(x[1], y[1])).map(([id, n]) => `<option value="${esc(id)}"${id === sel ? ' selected' : ''}>🧳 ${esc(n)}</option>`).join('');
+
+function toast(msg) { const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 6000); }
+/* How a change leaves this page. The page cannot write files, so the request (a small JSON text) must reach Expenses/Inbox:
+   - EDIT_URL_TEMPLATE: if you set it, that link is opened with {name} and {text} replaced (any automation app on any phone that accepts a link or an intent).
+   - iPhone and iPad: the Shortcut named SHORTCUT_NAME receives the text and saves it in the Inbox.
+   - Android and everything else: the page shares or downloads a file edit_<id>.txt; save or move it into the Inbox folder (a sync app can do this for you). */
+const EDIT_URL_TEMPLATE = '';
+const isApple = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function openLink(href) { const a = document.createElement('a'); a.href = href; document.body.appendChild(a); a.click(); a.remove(); }
+async function deliver(full) {
+  const text = JSON.stringify(full), name = `edit_${full.editId}.txt`;
+  if (EDIT_URL_TEMPLATE) { openLink(EDIT_URL_TEMPLATE.replace('{name}', encodeURIComponent(SHORTCUT_NAME)).replace('{text}', encodeURIComponent(text))); return 'Sent.'; }
+  if (isApple) { openLink(`shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(text)}`); return 'Sent.'; }
+  const file = new File([text], name, { type: 'text/plain' });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return `Shared ${name}. Save it in the Inbox folder.`; }
+  } catch (e) { if (e && e.name === 'AbortError') throw e; }
+  const url = URL.createObjectURL(file), a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000);
+  return `Downloaded ${name}. Move it into the Inbox folder.`;
+}
+async function send(row, req, what, also) {
+  const full = { kind: 'expense-edit', editId: uid(), expenseId: row.id, base: row.upd, ...req };
+  let msg;
+  try { msg = await deliver(full); } catch (e) { return toast('Cancelled. Nothing was sent.'); }
+  [row, ...(also || [])].forEach(x => pending.set(x.id, what)); dlg.close(); render();
+  toast(msg + ' The change appears here after the computer applies it and this page is opened again.');
+}
+
+function detail(i) {
+  const r = rows[i], trip = r.trip ? DATA.trips[r.trip] : '', wait = pending.get(r.id);
+  lock(false);
+  const actions = wait ? `<div class="pendingnote">⏳ ${esc(wait)} was sent for this expense. Open the page again after the computer has applied it.</div>`
+    : `<div class="actions"><button class="btn ghost" data-act="edit">✏️ Edit</button>${r.inst ? (r.gid ? '<button class="btn danger" data-act="delplan">🗑️ Delete plan</button>' : '') : '<button class="btn ghost" data-act="split">💳 Split</button><button class="btn danger" data-act="del">🗑️ Delete</button>'}</div>
+       ${r.inst ? '<div class="muted small">Part of an instalment plan: you can edit this instalment here, or delete the whole plan. To merge the plan back into one purchase, use the Mac.</div>' : ''}`;
+  dlg.innerHTML = `<div class="dlg"><h3>${esc(r.merchant)}</h3>
+    <div style="font-size:24px;font-weight:700" class="${r.amount < 0 ? 'neg' : ''}">${esc(money(r.amount, r.cur))}</div>
+    <dl class="kv"><dt>Date</dt><dd>${esc(fmtDate(r.date))}</dd><dt>Category</dt><dd>${esc(place(r.cat, r.sub))}</dd>
+    ${trip ? `<dt>Trip</dt><dd>🧳 ${esc(trip)}</dd>` : ''}${r.inst ? `<dt>Instalment</dt><dd>${esc(r.inst)}</dd>` : ''}</dl>
+    ${r.notes ? `<div class="notes">${esc(r.notes)}</div>` : ''}${r.rec ? `<a class="btn" ${isApple ? `href="shortcuts://run-shortcut?name=${encodeURIComponent(RECEIPT_SHORTCUT)}&input=text&text=${encodeURIComponent(r.rec)}"` : `href="../Receipts/${encodeURIComponent(r.rec)}" target="_blank" rel="noopener"`}>📎 Open receipt (${esc(r.rec.split('.').pop().toUpperCase())})</a>` : ''}
+    ${actions}<button class="close" id="closeDlg">Close</button></div>`;
+  dlg.dataset.i = i;
+  if (!dlg.open) dlg.showModal();
+}
+
+function editForm(r) {
+  lock(true);
+  const cats = [...DATA.categories].sort((x, y) => alpha(x.n, y.n));
+  const subOpts = (c, sel) => '<option value="">(none)</option>' + [...(DATA.categories.find(x => x.n === c)?.subs || [])].sort((x, y) => alpha(x[0], y[0])).map(x => `<option value="${esc(x[0])}"${x[0] === sel ? ' selected' : ''}>${esc(subLabel(c, x[0]))}</option>`).join('');
+  dlg.innerHTML = `<div class="dlg form"><h3>Edit expense</h3>
+    <label>Merchant<input id="eMer" value="${esc(r.merchant)}" autocomplete="off"></label>
+    <div class="two"><label>Amount<input id="eAmt" inputmode="decimal" value="${esc(String(r.amount))}"></label><label>Currency<input id="eCur" maxlength="3" value="${esc(r.cur)}" autocapitalize="characters"></label></div>
+    <label>Date<input id="eDate" type="date" value="${esc(r.date)}"></label>
+    <label>Category<select id="eCat">${cats.map(c => `<option value="${esc(c.n)}"${c.n === r.cat ? ' selected' : ''}>${esc(catLabel(c.n))}</option>`).join('')}</select></label>
+    <label>Subcategory<select id="eSub">${subOpts(r.cat, r.sub)}</select></label>
+    <label>Trip<select id="eTrip">${tripOptions(r.trip)}</select></label>
+    <label>Notes<textarea id="eNotes">${esc(r.notes)}</textarea></label>
+    <div class="err" id="eErr"></div>
+    <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn" data-act="save">Save</button></div></div>`;
+  $('eCat').onchange = () => { $('eSub').innerHTML = subOpts($('eCat').value, ''); };
+}
+function saveEdit(r) {
+  const err = m => { $('eErr').textContent = m; };
+  const merchant = $('eMer').value.trim(), amount = parseAmount($('eAmt').value), cur = $('eCur').value.trim().toUpperCase(), date = $('eDate').value;
+  if (!merchant) return err('The merchant is missing.');
+  if (amount === null) return err('Enter an amount other than zero, for example 12.50.');
+  if (!/^[A-Z]{3}$/.test(cur)) return err('The currency needs three letters, for example EUR.');
+  if (!validDate(date)) return err('Choose a valid date.');
+  const next = { date, merchant, amount, currency: cur, category: $('eCat').value, subcategory: $('eSub').value, tripId: $('eTrip').value, notes: $('eNotes').value.trim() };
+  const was = { date: r.date, merchant: r.merchant, amount: r.amount, currency: r.cur, category: r.cat, subcategory: r.sub, tripId: r.trip || '', notes: r.notes || '' };
+  const changes = {}; Object.keys(next).forEach(k => { if (next[k] !== was[k]) changes[k] = next[k]; });
+  if (!Object.keys(changes).length) return err('Nothing was changed.');
+  send(r, { action: 'edit', changes }, 'An edit');
+}
+
+function deleteConfirm(r) {
+  lock(true);
+  dlg.innerHTML = `<div class="dlg"><h3>Delete this expense?</h3>
+    <div><strong>${esc(r.merchant)}</strong><br>${esc(money(r.amount, r.cur))} · ${esc(fmtDate(r.date))}</div>
+    <div class="muted small">It is removed on the computer when the request is applied. You can undo it there from the Undo menu (the dashboard). The receipt file is kept.</div>
+    <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn danger" data-act="delgo">Delete</button></div></div>`;
+}
+
+const planOf = r => rows.filter(x => x.gid && x.gid === r.gid).sort((a, b) => a.date.localeCompare(b.date));
+function deletePlanConfirm(r) {
+  lock(true);
+  const plan = planOf(r), tot = plan.reduce((s, x) => s + Math.round(x.amount * 100), 0) / 100;
+  dlg.innerHTML = `<div class="dlg"><h3>Delete all installments?</h3>
+    <div><strong>${esc(r.merchant)}</strong><br>${plan.length} installments · ${esc(money(tot, r.cur))} in total<br>${esc(fmtDate(plan[0].date))} to ${esc(fmtDate(plan[plan.length - 1].date))}</div>
+    <div class="muted small">They are removed on the computer when the request is applied, all together. You can undo it there from the Undo menu. Receipt files are kept.</div>
+    <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn danger" data-act="delplango">Delete all</button></div></div>`;
+}
+
+function splitPlan(total, n, first) {
+  const cents = Math.round(Math.abs(total) * 100), sign = total < 0 ? -1 : 1, base = Math.floor(cents / n), rest = cents - base * n;
+  return Array.from({ length: n }, (_, k) => ({ date: addMonths(first, k), amount: sign * (base + (k < rest ? 1 : 0)) / 100 }));
+}
+function splitForm(r) {
+  lock(true);
+  dlg.innerHTML = `<div class="dlg form"><h3>Split into instalments</h3>
+    <div class="muted small">${esc(r.merchant)} · ${esc(money(r.amount, r.cur))} · bought on ${esc(fmtDate(r.date))}. Every date and amount can be edited.</div>
+    <div class="two"><label>Instalments<input id="sN" type="number" inputmode="numeric" min="2" max="120" value="3"></label><label>First date<input id="sFirst" type="date" value="${esc(r.date)}"></label></div>
+    <div id="sRows" class="form"></div><div id="sSum" class="small"></div><div class="err" id="sErr"></div>
+    <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn" data-act="splitgo" id="sGo">Split</button></div></div>`;
+  const fill = () => {
+    const n = Math.max(2, Math.min(120, parseInt($('sN').value, 10) || 2)), first = validDate($('sFirst').value) ? $('sFirst').value : r.date;
+    $('sRows').innerHTML = splitPlan(r.amount, n, first).map((p, k) => `<div class="instrow"><span class="n">${k + 1}/${n}</span><input type="date" class="sd" value="${p.date}"><input class="sa" inputmode="decimal" value="${p.amount.toFixed(2)}"></div>`).join('');
+    total();
+  };
+  const total = () => {
+    const sign = r.amount < 0 ? -1 : 1; let c = 0;
+    document.querySelectorAll('#sRows .sa').forEach(i => { const a = parseAmount(i.value); if (a !== null) c += Math.round(a * 100); });
+    const diff = c - Math.round(r.amount * 100);
+    $('sSum').innerHTML = `Total of the instalments: <strong>${esc(money(c / 100, r.cur))}</strong> · ` + (diff === 0 ? '<span class="muted">matches the purchase</span>' : `<span class="warn">differs from the purchase by ${esc(money(diff / 100, r.cur))} (interest or fees?)</span>`);
+    $('sGo').textContent = diff === 0 ? 'Split' : 'Split anyway';
+  };
+  $('sN').oninput = fill; $('sFirst').onchange = fill; $('sRows').oninput = total;
+  fill();
+}
+function saveSplit(r) {
+  const err = m => { $('sErr').textContent = m; };
+  const items = [...document.querySelectorAll('#sRows .instrow')].map(row => ({ date: row.querySelector('.sd').value, amount: parseAmount(row.querySelector('.sa').value) }));
+  if (items.length < 2) return err('Choose at least 2 instalments.');
+  const k = items.findIndex(it => !validDate(it.date) || it.amount === null || (it.amount < 0) !== (r.amount < 0));
+  if (k >= 0) return err(`Instalment ${k + 1} needs a valid date and an amount with the same sign as the purchase.`);
+  send(r, { action: 'split', installments: items }, 'The instalment plan');
+}
+
+dlg.onclick = e => {
+  const r = rows[+dlg.dataset.i], act = e.target.closest('[data-act]')?.dataset.act;
+  if (e.target.id === 'closeDlg' || (e.target === dlg && !dlg.dataset.locked)) return dlg.close();
+  if (!act || !r) return;
+  if (act === 'edit') editForm(r);
+  else if (act === 'back') detail(+dlg.dataset.i);
+  else if (act === 'save') saveEdit(r);
+  else if (act === 'del') deleteConfirm(r);
+  else if (act === 'delgo') send(r, { action: 'delete' }, 'A deletion');
+  else if (act === 'split') splitForm(r);
+  else if (act === 'delplan') deletePlanConfirm(r);
+  else if (act === 'delplango') { const plan = planOf(r); send(r, { action: 'delete-plan', groupId: r.gid, members: plan.map(x => ({ id: x.id, base: x.upd })) }, 'The deletion of the plan', plan.filter(x => x.id !== r.id)); }
+  else if (act === 'splitgo') saveSplit(r);
+};
+
+$('view').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.view = b.dataset.v; S.trip = ''; S.limit = 60; render(); window.scrollTo(0, 0); };
+$('tripsCard').onclick = e => { const b = e.target.closest('.trip'); if (!b) return; S.trip = b.dataset.t; S.limit = 60; render(); window.scrollTo(0, 0); };
+$('tripHead').onclick = e => { if (e.target.closest('#back')) { S.trip = ''; S.cat = ''; S.sub = ''; render(); window.scrollTo(0, 0); } };
+$('mode').onclick = e => { const b = e.target.closest('button'); if (!b) return; S.mode = b.dataset.m; S.limit = 60; render(); };
+$('prev').onclick = () => step(-1); $('next').onclick = () => step(1);
+function step(d) {
+  if (S.mode === 'year') { const ys = [...new Set(months.map(m => +m.slice(0, 4)))].sort(); const j = ys.indexOf(S.y) + d; if (ys[j] !== undefined) S.y = ys[j]; }
+  else { const k = `${S.y}-${pad(S.m + 1)}`, j = months.indexOf(k) + d; if (months[j]) { S.y = +months[j].slice(0, 4); S.m = +months[j].slice(5, 7) - 1; } }
+  S.limit = 60; render();
+}
+$('q').oninput = e => { S.q = e.target.value.trim(); S.limit = 60; render(); };
+$('cat').onchange = e => { S.cat = e.target.value; S.sub = ''; S.limit = 60; render(); };
+$('sub').onchange = e => { const v = e.target.value; if (v) { const i = v.indexOf('|'); S.cat = v.slice(0, i); S.sub = v.slice(i + 1); } else S.sub = ''; S.limit = 60; render(); };
+$('clear').onclick = () => { S.q = ''; S.cat = ''; S.sub = ''; $('q').value = ''; render(); };
+$('cats').onclick = e => { const b = e.target.closest('.bar'); if (!b) return; const k = b.dataset.k; if (S.cat) { S.sub = S.sub === k ? '' : k; } else { S.cat = k; S.sub = ''; } S.limit = 60; render(); };
+$('list').onclick = e => { const m = e.target.closest('#more'); if (m) { S.limit += 100; return render(); } const b = e.target.closest('.row'); if (b) detail(+b.dataset.i); };
+{ const g = DATA.generated && new Date(DATA.generated); $('stamp').textContent = g && !isNaN(g) ? `Updated ${fmtDate(g.toLocaleDateString('en-CA'))} ${pad(g.getHours())}:${pad(g.getMinutes())}` : ''; }
+render();
+</script>
+</body>
+</html>

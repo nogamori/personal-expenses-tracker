@@ -30,25 +30,25 @@ First public release. It is the last release candidate (1.0.0-rc.2) plus:
 ## [1.0.0-rc.1] - 2026-10-27
 First release candidate. The Shortcut writes expenses end to end on the Mac and the iPhone, and the checks below pass.
 ### Added
-- `scripts/test.py`: 45 automatic tests of the server on a temporary copy of the project (validation, inbox, edits, deletes and instalments from the phone, undo, compressed backups and restoring one by hand, and the security rules). The tests were checked by breaking three rules on purpose and confirming they fail.
+- `scripts/test.py`: 45 automatic tests of the server on a temporary copy of the project (validation, inbox, edits, deletes and installments from the phone, undo, compressed backups and restoring one by hand, and the security rules). The tests were checked by breaking three rules on purpose and confirming they fail.
 - Security review: the server refuses a foreign `Host` or `Origin`, a change without the app header and any path outside `Receipts/` or `public/`. New: an inbox file larger than 1 MB is refused unread.
 ### Changed
-- README: instalments, the phone, checks and tests, and security are described.
+- README: installments, the phone, checks and tests, and security are described.
 
 ## [0.9.0-beta.20] - 2026-10-27
 ### Added
-- **Edit plan** for instalment purchases (expense drawer): change the number of instalments, their dates and their amounts in one form. The first instalments keep their records (receipt, notes); extra ones are copied from the first and surplus ones are removed. One undoable action.
+- **Edit plan** for installment purchases (expense drawer): change the number of installments, their dates and their amounts in one form. The first installments keep their records (receipt, notes); extra ones are copied from the first and surplus ones are removed. One undoable action.
 ### Changed
-- An instalment no longer has a *Delete* button in the drawer, because deleting one row broke the plan. Use *Edit plan*, *Merge installments* or *Delete all installments*.
+- An installment no longer has a *Delete* button in the drawer, because deleting one row broke the plan. Use *Edit plan*, *Merge installments* or *Delete all installments*.
 
 ## [0.9.0-beta.19] - 2026-10-27
 ### Added
-- **Delete a whole instalment plan.** The expense drawer has *Delete all installments*, and the iPhone page has *Delete plan* on any instalment. All the instalments are removed in one undoable action ("Deleted N instalments of …"). From the phone the request lists the instalments the page knew (`delete-plan`, with `groupId` and `members`); if the plan changed on the Mac since (an instalment edited, added or removed) nothing is deleted and the request goes to `Inbox/Failed/`.
+- **Delete a whole installment plan.** The expense drawer has *Delete all installments*, and the iPhone page has *Delete plan* on any installment. All the installments are removed in one undoable action ("Deleted N installments of …"). From the phone the request lists the installments the page knew (`delete-plan`, with `groupId` and `members`); if the plan changed on the Mac since (an installment edited, added or removed) nothing is deleted and the request goes to `Inbox/Failed/`.
 
 ## [0.9.0-beta.18] - 2026-10-26
 ### Added
 - **Edit, delete and split from the iPhone.** The mobile page has *Edit*, *Split* and *Delete* in an expense's details. A change is sent as a small request to the Shortcut *Expenses Mobile*, which saves it in `Inbox/`; the server applies it as one undoable action ("... (from the Shortcut)"). Requests carry the expense `id`, the `base` version the page knew (the change is refused if the expense changed on the Mac meanwhile) and a unique `editId` (a request applied twice changes nothing). Refused requests go to `Inbox/Failed/` with an explanation.
-- Split: the instalments are filled in from the total and the count (monthly, from the purchase date, one cent each to the first ones when the division is not exact) and every date and amount can be edited. Deleting asks for confirmation. One instalment of a plan can be edited on the phone, or the whole plan deleted; a single instalment cannot be deleted or split again.
+- Split: the installments are filled in from the total and the count (monthly, from the purchase date, one cent each to the first ones when the division is not exact) and every date and amount can be edited. Deleting asks for confirmation. One installment of a plan can be edited on the phone, or the whole plan deleted; a single installment cannot be deleted or split again.
 - Sent changes show "⏳ sent" on the page until it is opened again.
 
 ## [0.9.0-beta.17] - 2026-10-13
@@ -65,7 +65,7 @@ First release candidate. The Shortcut writes expenses end to end on the Mac and 
 - Clicking outside the expense details drawer closes it.
 - The monthly trend chart now ends one month after the selected month, so choosing April still shows May (and October shows November).
 ### Added
-- **Mobile view.** The server writes `Mobile/expenses.html` at start and after every change: a read-only copy of your data in one self-contained page for the iPhone (month, year or all time; search; category and subcategory filters; totals; spending by category; tap an expense for its notes, trip and instalment, and a button that runs the Shortcut *Open Receipt* to show the receipt image or PDF in Safari). Subcategories can be chosen directly, and show their emojis. It has no editing and no Settings or Data tabs. Open it from a Shortcut that Base64-encodes the file and opens it as a `data:` URL in Safari, because the Files app preview does not run scripts.
+- **Mobile view.** The server writes `Mobile/expenses.html` at start and after every change: a read-only copy of your data in one self-contained page for the iPhone (month, year or all time; search; category and subcategory filters; totals; spending by category; tap an expense for its notes, trip and installment, and a button that runs the Shortcut *Open Receipt* to show the receipt image or PDF in Safari). Subcategories can be chosen directly, and show their emojis. It has no editing and no Settings or Data tabs. Open it from a Shortcut that Base64-encodes the file and opens it as a `data:` URL in Safari, because the Files app preview does not run scripts.
 
 ## [0.9.0-beta.14] - 2026-10-08
 ### Added

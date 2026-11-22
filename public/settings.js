@@ -141,7 +141,7 @@ async function secData(b) {
     <h3>Where your files are</h3>
     <dl class="kv wide paths"><dt>Data</dt><dd><code>${esc(a.paths.data)}</code></dd><dt>Receipts</dt><dd><code>${esc(a.paths.receipts)}</code></dd>
       <dt>Backups</dt><dd><code>${esc(a.paths.backups)}</code></dd><dt>Prompt</dt><dd><code>${esc(a.paths.prompt)}</code></dd></dl>
-    <p class="muted small">Everything stays on this computer, in this folder. Nothing is sent anywhere.</p>
+    <p class="muted small">Everything stays in the project folder on the computer that runs the server. The app itself sends nothing anywhere (only what your own phone automation sends to the AI model you chose).</p>
     <h3>Receipt inbox</h3>
     <p class="muted small">Your phone automation leaves one small file per receipt in <code>Inbox/</code>. The server imports it within about 20 seconds (it keeps the file in <code>Inbox/Processed/</code>) and the import can be undone. Files it cannot read go to <code>Inbox/Failed/</code> with an explanation.</p>
     <dl class="kv wide"><dt>Waiting</dt><dd>${ib.pending ?? 0} ${ib.pending ? '<span class="muted small">(a file waits up to 10 minutes for its receipt image to finish syncing)</span>' : ''}</dd>
@@ -163,7 +163,7 @@ async function secAbout(b) {
       <dt>Version</dt><dd><strong>v${esc(a.version || '?')}</strong> <span class="chip">beta</span></dd>
       <dt>Data format</dt><dd>schema version ${a.schemaVersion}</dd>
       <dt>Server</dt><dd>Python ${esc(a.python)} · started ${esc(fmtStamp(a.startedAt))}</dd>
-      <dt>Privacy</dt><dd>Runs only on this computer, with no accounts and no external services.</dd></dl>
+      <dt>Privacy</dt><dd>Runs only on the computer that hosts it, with no accounts and no external services.</dd></dl>
     <h3>What changed</h3><pre class="preview" tabindex="0" aria-label="Changelog">${esc(log) || 'No changelog found.'}</pre>`;
 }
 

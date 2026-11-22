@@ -264,11 +264,11 @@ function detail(i) {
   lock(false);
   const actions = wait ? `<div class="pendingnote">⏳ ${esc(wait)} was sent for this expense. Open the page again after the computer has applied it.</div>`
     : `<div class="actions"><button class="btn ghost" data-act="edit">✏️ Edit</button>${r.inst ? (r.gid ? '<button class="btn danger" data-act="delplan">🗑️ Delete plan</button>' : '') : '<button class="btn ghost" data-act="split">💳 Split</button><button class="btn danger" data-act="del">🗑️ Delete</button>'}</div>
-       ${r.inst ? '<div class="muted small">Part of an instalment plan: you can edit this instalment here, or delete the whole plan. To merge the plan back into one purchase, use the Mac.</div>' : ''}`;
+       ${r.inst ? '<div class="muted small">Part of an installment plan: you can edit this installment here, or delete the whole plan. To merge the plan back into one purchase, use the Mac.</div>' : ''}`;
   dlg.innerHTML = `<div class="dlg"><h3>${esc(r.merchant)}</h3>
     <div style="font-size:24px;font-weight:700" class="${r.amount < 0 ? 'neg' : ''}">${esc(money(r.amount, r.cur))}</div>
     <dl class="kv"><dt>Date</dt><dd>${esc(fmtDate(r.date))}</dd><dt>Category</dt><dd>${esc(place(r.cat, r.sub))}</dd>
-    ${trip ? `<dt>Trip</dt><dd>🧳 ${esc(trip)}</dd>` : ''}${r.inst ? `<dt>Instalment</dt><dd>${esc(r.inst)}</dd>` : ''}</dl>
+    ${trip ? `<dt>Trip</dt><dd>🧳 ${esc(trip)}</dd>` : ''}${r.inst ? `<dt>Installment</dt><dd>${esc(r.inst)}</dd>` : ''}</dl>
     ${r.notes ? `<div class="notes">${esc(r.notes)}</div>` : ''}${r.rec ? `<a class="btn" ${isApple ? `href="shortcuts://run-shortcut?name=${encodeURIComponent(RECEIPT_SHORTCUT)}&input=text&text=${encodeURIComponent(r.rec)}"` : `href="../Receipts/${encodeURIComponent(r.rec)}" target="_blank" rel="noopener"`}>📎 Open receipt (${esc(r.rec.split('.').pop().toUpperCase())})</a>` : ''}
     ${actions}<button class="close" id="closeDlg">Close</button></div>`;
   dlg.dataset.i = i;
@@ -329,9 +329,9 @@ function splitPlan(total, n, first) {
 }
 function splitForm(r) {
   lock(true);
-  dlg.innerHTML = `<div class="dlg form"><h3>Split into instalments</h3>
+  dlg.innerHTML = `<div class="dlg form"><h3>Split into installments</h3>
     <div class="muted small">${esc(r.merchant)} · ${esc(money(r.amount, r.cur))} · bought on ${esc(fmtDate(r.date))}. Every date and amount can be edited.</div>
-    <div class="two"><label>Instalments<input id="sN" type="number" inputmode="numeric" min="2" max="120" value="3"></label><label>First date<input id="sFirst" type="date" value="${esc(r.date)}"></label></div>
+    <div class="two"><label>Installments<input id="sN" type="number" inputmode="numeric" min="2" max="120" value="3"></label><label>First date<input id="sFirst" type="date" value="${esc(r.date)}"></label></div>
     <div id="sRows" class="form"></div><div id="sSum" class="small"></div><div class="err" id="sErr"></div>
     <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn" data-act="splitgo" id="sGo">Split</button></div></div>`;
   const fill = () => {
@@ -343,7 +343,7 @@ function splitForm(r) {
     const sign = r.amount < 0 ? -1 : 1; let c = 0;
     document.querySelectorAll('#sRows .sa').forEach(i => { const a = parseAmount(i.value); if (a !== null) c += Math.round(a * 100); });
     const diff = c - Math.round(r.amount * 100);
-    $('sSum').innerHTML = `Total of the instalments: <strong>${esc(money(c / 100, r.cur))}</strong> · ` + (diff === 0 ? '<span class="muted">matches the purchase</span>' : `<span class="warn">differs from the purchase by ${esc(money(diff / 100, r.cur))} (interest or fees?)</span>`);
+    $('sSum').innerHTML = `Total of the installments: <strong>${esc(money(c / 100, r.cur))}</strong> · ` + (diff === 0 ? '<span class="muted">matches the purchase</span>' : `<span class="warn">differs from the purchase by ${esc(money(diff / 100, r.cur))} (interest or fees?)</span>`);
     $('sGo').textContent = diff === 0 ? 'Split' : 'Split anyway';
   };
   $('sN').oninput = fill; $('sFirst').onchange = fill; $('sRows').oninput = total;
@@ -352,10 +352,10 @@ function splitForm(r) {
 function saveSplit(r) {
   const err = m => { $('sErr').textContent = m; };
   const items = [...document.querySelectorAll('#sRows .instrow')].map(row => ({ date: row.querySelector('.sd').value, amount: parseAmount(row.querySelector('.sa').value) }));
-  if (items.length < 2) return err('Choose at least 2 instalments.');
+  if (items.length < 2) return err('Choose at least 2 installments.');
   const k = items.findIndex(it => !validDate(it.date) || it.amount === null || (it.amount < 0) !== (r.amount < 0));
-  if (k >= 0) return err(`Instalment ${k + 1} needs a valid date and an amount with the same sign as the purchase.`);
-  send(r, { action: 'split', installments: items }, 'The instalment plan');
+  if (k >= 0) return err(`Installment ${k + 1} needs a valid date and an amount with the same sign as the purchase.`);
+  send(r, { action: 'split', installments: items }, 'The installment plan');
 }
 
 dlg.onclick = e => {

@@ -160,18 +160,18 @@ def run(srv, tmp):
     items = [{"date": "2026-10-20", "amount": first}, {"date": "2026-11-20", "amount": part}, {"date": "2026-12-20", "amount": part}]
     srv.inbox(req(action="split", expenseId=w["id"], base=w["updatedAt"], installments=items))
     plan = [e for e in srv.data()["expenses"] if (e.get("installment") or {}).get("purchaseDate") == w["date"] and e["merchant"] == w["merchant"] and e["notes"] == w["notes"] and e["date"] in ("2026-10-20", "2026-11-20", "2026-12-20")]
-    check("A split from the phone creates the instalments and the sum matches", len(plan) == 3 and round(sum(e["amount"] for e in plan), 2) == total, [e["amount"] for e in plan])
+    check("A split from the phone creates the installments and the sum matches", len(plan) == 3 and round(sum(e["amount"] for e in plan), 2) == total, [e["amount"] for e in plan])
     gid = plan[0]["installment"]["groupId"] if plan else ""
     ip = next(e for e in srv.data()["expenses"] if e["id"] == plan[1]["id"]) if plan else {}
     r = req(action="delete", expenseId=ip.get("id", "?"), base=ip.get("updatedAt")); srv.inbox(r)
-    check("Deleting one instalment from the phone is refused", srv.refused(r["editId"] + ".txt") and any(e["id"] == ip.get("id") for e in srv.data()["expenses"]))
+    check("Deleting one installment from the phone is refused", srv.refused(r["editId"] + ".txt") and any(e["id"] == ip.get("id") for e in srv.data()["expenses"]))
     members = lambda: [{"id": e["id"], "base": e["updatedAt"]} for e in srv.data()["expenses"] if (e.get("installment") or {}).get("groupId") == gid]
     stale = members()
     srv.call("PUT", "/api/expenses/" + plan[2]["id"], {"expense": {"notes": "edited on the Mac"}, "baseRevision": srv.data()["revision"]})
     r = req(action="delete-plan", groupId=gid, members=stale); srv.inbox(r)
     check("Deleting a plan that changed on the Mac is refused", srv.refused(r["editId"] + ".txt") and len(members()) == 3)
     srv.inbox(req(action="delete-plan", groupId=gid, members=members()))
-    check("Deleting a whole plan from the phone removes every instalment", len(members()) == 0)
+    check("Deleting a whole plan from the phone removes every installment", len(members()) == 0)
 
     # ---------- the dashboard API: split, edit plan, delete plan, undo ----------
     E = srv.data()["expenses"]
@@ -190,9 +190,9 @@ def run(srv, tmp):
     p = sorted(plan2(), key=lambda e: e["installment"]["index"])
     check("Edit plan changes the number, dates and amounts and keeps the first records", r["_status"] == 200 and [e["id"] for e in p] == ids0[:2] and [e["amount"] for e in p] == [10, 20], r)
     r = srv.call("POST", "/api/installments/replace", {"groupId": g2, "installments": [two[0]], "baseRevision": srv.data()["revision"]})
-    check("Edit plan with one instalment is refused", r["_status"] in (400, 422), r["_status"])
+    check("Edit plan with one installment is refused", r["_status"] in (400, 422), r["_status"])
     hist = srv.get("/api/history")["history"]
-    last = next(h for h in hist if h["label"].startswith("Edited the instalment plan"))
+    last = next(h for h in hist if h["label"].startswith("Edited the installment plan"))
     n_before = len(srv.data()["expenses"])
     srv.call("POST", "/api/undo", {"actionId": last["id"], "baseRevision": srv.data()["revision"]})
     check("Undo restores the plan as it was", len(plan2()) == 4 and len(srv.data()["expenses"]) == n_before + 2)

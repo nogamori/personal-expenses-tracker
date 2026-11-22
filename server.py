@@ -394,7 +394,7 @@ INBOX_STATE = {"last": None}
 INBOX_SUFFIXES = (".json", ".txt")   # some automation tools can only save .txt
 INBOX_POLL_SECONDS = 20
 INBOX_MAX_BYTES = 1_000_000   # a request or a model reply is a few KB; anything bigger is refused unread
-DEFER_SECONDS = 600     # wait this long for the receipt file to arrive (iCloud) before importing without it
+DEFER_SECONDS = 600     # wait this long for the receipt file to arrive (a sync service) before importing without it
 RECEIPT_ID_RE = re.compile(r"^\d{8}_\d{6}$")
 CURRENCY_SYMBOLS = {"€": "EUR", "R$": "BRL", "US$": "USD", "$": "USD", "£": "GBP", "¥": "JPY"}
 CARD_MASK_RE = re.compile(r"(?i)((?:cart[ãa]o|cartao|card|tarjeta|visa|mastercard|master)\b[^0-9\n]{0,30}?)(\d[\d ]{11,22}\d)(?!\d)")
@@ -537,11 +537,11 @@ def apply_request(doc, req):
         if not isinstance(req.get("groupId"), str) or not isinstance(req.get("members"), list): raise ApiError(422, "The request has no groupId or members.")
         return apply_delete_plan(doc, req["groupId"], req["members"])
     cur = next((x for x in doc["expenses"] if x["id"] == req.get("expenseId")), None)
-    if not cur: raise ApiError(404, "That expense no longer exists (it was deleted or merged on the Mac).")
+    if not cur: raise ApiError(404, "That expense no longer exists (it was deleted or merged on the computer).")
     if req.get("base") != cur.get("updatedAt"):
         raise ApiError(409, f"That expense was changed after the page was built (page: {req.get('base')}, now: {cur.get('updatedAt')}). Open the page again and repeat the change.")
     if action == "delete":
-        if cur.get("installment"): raise ApiError(409, "This expense is one installment of a purchase. Merge the installments on the Mac before deleting it.")
+        if cur.get("installment"): raise ApiError(409, "This expense is one installment of a purchase. Merge the installments on the computer before deleting it.")
         doc["expenses"].remove(cur)
         return f"Deleted expense: {cur['merchant']} ({cur['date']})"
     if action == "split":
@@ -732,26 +732,26 @@ def migrate_backups():
 
 
 def apply_delete_plan(doc, group_id, members=None):
-    """Deletes every installment of one plan. `members` ([{"id","base"}]) is what the phone page knew: if the plan on the Mac differs
+    """Deletes every installment of one plan. `members` ([{"id","base"}]) is what the phone page knew: if the plan on the computer differs
     (an installment was added, removed or edited), nothing is deleted. Returns the undo label; raises ApiError before changing anything."""
     plan = [e for e in doc["expenses"] if (e.get("installment") or {}).get("groupId") == group_id]
-    if not plan: raise ApiError(404, "That instalment plan no longer exists (it was merged or deleted on the Mac).")
+    if not plan: raise ApiError(404, "That installment plan no longer exists (it was merged or deleted on the computer).")
     if members is not None:
         known = {m.get("id"): m.get("base") for m in members if isinstance(m, dict)}
         now = {e["id"]: e.get("updatedAt") for e in plan}
         if known != now:
-            raise ApiError(409, "The instalment plan was changed after the page was built (it has %d instalments there, %d now, or one was edited). Open the page again and repeat the change." % (len(known), len(now)))
+            raise ApiError(409, "The installment plan was changed after the page was built (it has %d installments there, %d now, or one was edited). Open the page again and repeat the change." % (len(known), len(now)))
     ids = {e["id"] for e in plan}
     doc["expenses"] = [e for e in doc["expenses"] if e["id"] not in ids]
     first = min(plan, key=lambda e: (e["date"], e["installment"].get("index", 0)))
-    return f"Deleted {len(plan)} instalments of {first['merchant']}"
+    return f"Deleted {len(plan)} installments of {first['merchant']}"
 
 
 def apply_replace_plan(doc, group_id, items):
-    """Rewrites an instalment plan: the number of instalments, their dates and their amounts. The first instalments keep their records (receipt, notes,
+    """Rewrites an installment plan: the number of installments, their dates and their amounts. The first installments keep their records (receipt, notes,
     ids); extra ones are copied from the first, and surplus ones are removed. Returns the undo label; raises ApiError before changing anything."""
     members = sorted([e for e in doc["expenses"] if (e.get("installment") or {}).get("groupId") == group_id], key=lambda e: (e["installment"].get("index", 0), e["date"]))
-    if not members: raise ApiError(404, "That instalment plan no longer exists (it was merged or deleted).")
+    if not members: raise ApiError(404, "That installment plan no longer exists (it was merged or deleted).")
     if not isinstance(items, list) or not 2 <= len(items) <= 120: raise ApiError(422, "Choose between 2 and 120 installments.")
     sign = 1 if members[0]["amount"] > 0 else -1
     purchase = members[0]["installment"].get("purchaseDate")
@@ -769,7 +769,7 @@ def apply_replace_plan(doc, group_id, items):
     at = min(i for i, x in enumerate(doc["expenses"]) if x["id"] in ids)
     rest = [x for x in doc["expenses"] if x["id"] not in ids]
     doc["expenses"] = rest[:at] + made + rest[at:]
-    return f"Edited the instalment plan of {members[0]['merchant']} ({len(members)} to {len(made)} installments)" if len(members) != len(made) else f"Edited the instalment plan of {members[0]['merchant']}"
+    return f"Edited the installment plan of {members[0]['merchant']} ({len(members)} to {len(made)} installments)" if len(members) != len(made) else f"Edited the installment plan of {members[0]['merchant']}"
 
 
 def apply_split(doc, expense_id, items):
@@ -1241,13 +1241,15 @@ def main():
         except (AttributeError, ValueError): pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8765)
+    ap.add_argument("--empty", action="store_true", help="on the first run, start without the sample expenses and trips")
     a = ap.parse_args()
     if not os.path.isfile(DATA):  # first run: start from the sample data (replace it with your own in Settings)
         sample = os.path.join(ROOT, "examples", "sample-data.json")
         os.makedirs(os.path.dirname(DATA), exist_ok=True)
-        with open(sample, encoding="utf-8") as f: txt = f.read()
-        with open(DATA, "w", encoding="utf-8") as f: f.write(txt)
-        print("First run: data/expenses.json created from examples/sample-data.json.")
+        with open(sample, encoding="utf-8") as f: sample_doc = json.load(f)
+        if a.empty: sample_doc["expenses"] = []; sample_doc["trips"] = []
+        with open(DATA, "w", encoding="utf-8") as f: json.dump(sample_doc, f, ensure_ascii=False, indent=2)
+        print("First run: data/expenses.json created " + ("with the categories only (no expenses)." if a.empty else "from examples/sample-data.json."))
     with LOCK:  # one-time upgrade for older files, then (re)generate the prompt file
         n = migrate_backups()
         if n: print(f"Compressed {n} older backups in data/backups/.")

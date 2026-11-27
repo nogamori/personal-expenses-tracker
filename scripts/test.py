@@ -80,6 +80,7 @@ def main():
         srv = Server(tmp)
         try:
             run(srv, tmp)
+            regional(srv, tmp)
         finally:
             srv.stop()
         # restore a backup the way the README describes
@@ -208,6 +209,21 @@ def run(srv, tmp):
     check("Applied edit ids are remembered", len(json.load(open(os.path.join(tmp, "data", "applied-edits.json")))) >= 4)
     page = open(os.path.join(tmp, "Mobile", "expenses.html"), encoding="utf-8").read()
     check("The mobile page is regenerated with the ids and the plan ids", "const DATA = {" in page and '"rows":[["' in page)
+
+
+def regional(srv, tmp):
+    """Regional format: only known options are saved, and the phone page receives them together with the shared script."""
+    def save(fmt):
+        return srv.call("POST", "/api/trips", {"op": "setFormat", "format": fmt, "baseRevision": srv.data()["revision"]})
+    before = srv.data()
+    check("The data comes with the computer's regional settings (empty where they cannot be read)", isinstance(before.get("systemFormat"), dict))
+    save({"number": "comma", "symbol": "auto", "date": "iso", "time": "24"})
+    check("The regional format is saved, without the automatic options", srv.data()["settings"].get("format") == {"number": "comma", "date": "iso", "time": "24"}, srv.data()["settings"])
+    check("The system settings are never written into the data file", "systemFormat" not in json.load(open(os.path.join(tmp, "data", "expenses.json"), encoding="utf-8")))
+    save({"number": "roman"})
+    check("An unknown regional option is refused", srv.data()["settings"]["format"]["number"] == "comma")
+    page = open(os.path.join(tmp, "Mobile", "expenses.html"), encoding="utf-8").read()
+    check("The phone page carries the format and the shared script", '"format":{"number":"comma"' in page and "function makeFormat" in page and "/*SHARED*/" not in page)
 
 
 def restore(tmp):

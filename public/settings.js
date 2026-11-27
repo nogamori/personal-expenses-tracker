@@ -2,7 +2,7 @@
 /* Settings: categories, how totals work, receipt prompt, data & storage and about. Loaded after data-view.js. */
 
 const ST = { section: 'categories' };
-const SECTIONS = [['categories', '🏷️', 'Categories'], ['trips', '🧳', 'Home & trips'], ['totals', 'ℹ️', 'How totals work'], ['prompt', '🤖', 'Receipt prompt'], ['data', '💾', 'Data & storage'], ['about', '✨', 'About']];
+const SECTIONS = [['categories', '🏷️', 'Categories'], ['trips', '🧳', 'Home & trips'], ['format', '🌍', 'Regional format'], ['totals', 'ℹ️', 'How totals work'], ['prompt', '🤖', 'Receipt prompt'], ['data', '💾', 'Data & storage'], ['about', '✨', 'About']];
 const getJson = async p => (await fetch(p, { cache: 'no-store' })).json();
 const getText = async p => (await fetch(p, { cache: 'no-store' })).text();
 
@@ -15,7 +15,7 @@ function renderSettings() {
 
 function renderSection() {
   const b = $('#setBody'); if (!b) return;
-  ({ categories: secCategories, trips: secTrips, totals: secTotals, prompt: secPrompt, data: secData, about: secAbout }[ST.section])(b);
+  ({ categories: secCategories, trips: secTrips, format: secFormat, totals: secTotals, prompt: secPrompt, data: secData, about: secAbout }[ST.section])(b);
 }
 
 function secCategories(b) {
@@ -97,6 +97,29 @@ document.addEventListener('click', async ev => {
   if (c('[data-review]')) { const rv = reviewSets(); await setTab('data'); D.review = rv.inTrip.length ? 'inTrip' : 'outTrip'; renderData(); }
 });
 
+const FORMAT_FIELDS = [
+  ['number', 'Number', [['dot', '1,234.50'], ['comma', '1.234,50']], f => f.money(1234.5, 'EUR').replace(/[^0-9., ]/g, '').trim()],
+  ['symbol', 'Currency symbol', [['before', 'Before the amount (€10)'], ['after', 'After the amount (10 €)']], f => f.money(10, 'EUR')],
+  ['date', 'Date', [['text', 'DD Mon YYYY — 15 Sep 2026'], ['dmy', 'DD/MM/YYYY — 15/09/2026'], ['mdy', 'MM/DD/YYYY — 09/15/2026'], ['iso', 'YYYY-MM-DD — 2026-09-15']], f => `${f.autoPattern} — ${f.date('2026-09-15')}`],
+  ['time', 'Time', [['24', '24-hour (18:30)'], ['12', '12-hour (6:30 pm)']], f => f.time(new Date(2026, 8, 15, 18, 30))],
+];
+function secFormat(b) {
+  const p = S.doc.settings?.format || {}, sys = S.doc.systemFormat || {}, system = makeFormat({}, sys);
+  b.innerHTML = `<h2>🌍 Regional format</h2>
+    <p class="muted small" style="max-width:62ch"><strong>Automatic</strong> ${sys.source
+      ? `follows the settings of the computer that runs the app (${esc(sys.source)}); reload the page after changing them there. The phone page follows the phone's browser.`
+      : `follows the language and region of your browser (<code>${esc(navigator.language)}</code>).`} A format picked here applies to the computer and the phone page. Month names stay in English, and the date picker is drawn by the browser.</p>
+    <div class="formgrid" style="max-width:520px">${FORMAT_FIELDS.map(([k, label, opts, sample]) => `<label class="field full"><span>${label}</span><select data-format="${k}">
+      <option value="auto">Automatic (${esc(sample(system))})</option>${opts.map(([v, t]) => `<option value="${v}" ${p[k] === v ? 'selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`).join('')}</div>
+    <p class="small">Preview: <strong>${esc(fmtMoney(-1234.5, 'EUR'))}</strong> · <strong>${esc(fmtDate('2026-09-15'))}</strong> · <strong>${esc(FMTR.time(new Date(2026, 8, 15, 18, 30)))}</strong></p>`;
+}
+document.addEventListener('change', async ev => {
+  if (!ev.target.matches('[data-format]')) return;
+  const format = Object.fromEntries([...document.querySelectorAll('[data-format]')].map(x => [x.dataset.format, x.value]));
+  try { await api('POST', '/trips', { op: 'setFormat', format }); await loadData(false); renderSettings(); toastUndo('Regional format saved.'); }
+  catch (e) { toast(e.message, true); renderSettings(); }
+});
+
 function secTotals(b) {
   b.innerHTML = `<h2>ℹ️ How totals work</h2><div class="info">
     <p><strong>Total spent</strong> is the sum of every expense dated inside the selected period that matches your search, category, subcategory and merchant filters. Refunds (negative amounts) are subtracted, and the card says how much they reduced the total.</p>
@@ -123,7 +146,7 @@ async function secPrompt(b) {
   try { $('#promptPreview').textContent = await getText('/api/prompt'); } catch { $('#promptPreview').textContent = 'The prompt file could not be loaded.'; }
 }
 
-const fmtStamp = iso => { if (!iso) return '—'; const d = new Date(iso); return `${fmtDate(d.toLocaleDateString('en-CA'))} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const fmtStamp = iso => { if (!iso) return '—'; const d = new Date(iso); return `${fmtDate(d.toLocaleDateString('en-CA'))} ${FMTR.time(d)}`; };
 
 async function secData(b) {
   b.innerHTML = '<h2>💾 Data &amp; storage</h2><div class="skeleton" style="width:50%"></div><div class="skeleton"></div>';

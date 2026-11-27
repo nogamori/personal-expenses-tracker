@@ -18,6 +18,9 @@ All the data below is made up (`examples/sample-data.json`).
 **Settings**: categories, subcategories, emojis, descriptions, home city and the receipt prompt.
 ![Settings](docs/screenshots/settings.png)
 
+**Regional format**: numbers, currency symbol, dates and time, following the computer's settings or chosen by you.
+![Regional format](docs/screenshots/regional.png)
+
 **On the phone**: a read-only page with all your data. Month view, trips, one trip and an expense's details (edit, split, delete).
 
 <p>
@@ -51,6 +54,8 @@ The first run creates `data/expenses.json` from `examples/sample-data.json`, so 
 - **Undo:** the **↩️ Undo** menu lists the last 10 saved actions; choosing one undoes it and everything above it, and an undo can itself be undone. `⌘Z` / `Ctrl+Z` undoes the latest action.
 - **Trips:** the **🧳 Trips** tab is the Dashboard limited to trips: pick a trip on the left (or none, for every trip) and use the same filters, totals, categories and table, with cost per day. Add, edit and delete trips there; set your home city in Settings. Expenses are assigned to a trip (🧳) without changing their category, and the 🧳 of an expense opens its trip. The Data tab can review expenses dated inside a trip but not assigned.
 - **Reload (Cmd/Ctrl+R):** the page keeps the tab, filters, grouping and selected trip of that browser tab.
+- **Search** ignores case, accents and, in names, spaces and punctuation (`aigu` finds *Aigües*, `elcorte` finds *El Corte Inglés*). An amount can be typed with a comma or a dot. Every word must be found; there is no fuzzy matching.
+- **Regional format:** numbers, currency symbol, dates and times follow the computer's settings (macOS, Windows) or the browser's, and can be changed in *Settings › Regional format*.
 - **⚙️ Settings:** categories (add, rename, delete, descriptions, emojis), home city, *How totals work*, the receipt prompt (rules, copy, preview), data and storage information with an integrity check, and *About* (version and changelog).
 
 ## Folder map
@@ -61,7 +66,7 @@ start-expenses.sh        start from a terminal (Linux, macOS)
 examples/                sample-data.json, used on the first run
 docs/screenshots/        the pictures in this README
 server.py                the local server (Python standard library only)
-public/                  the dashboard: index.html, styles.css, app.js, data-view.js, settings.js, trips.js
+public/                  the dashboard: index.html, styles.css, shared.js, app.js, data-view.js, settings.js, trips.js
 data/
   expenses.json          your data (the source of truth)
   receipt-prompt.md      receipt prompt for your phone automation, generated automatically
@@ -135,7 +140,7 @@ Getting the page onto the phone and opening it:
 
 ## Checks and tests
 - `python3 scripts/validate.py` checks your data (format, unique ids, receipt files, card numbers, category names). The same checks run from *Settings › Data & storage*.
-- `python3 scripts/test.py` runs 45 tests of the server on a **temporary copy** (your data, receipts and inbox are never touched): validation, the inbox, edits from the phone, installments, undo, backups and restoring one, and the security rules below. It takes under a minute.
+- `python3 scripts/test.py` runs 50 tests of the server on a **temporary copy** (your data, receipts and inbox are never touched): validation, the inbox, edits from the phone, installments, undo, backups and restoring one, and the security rules below. It takes under a minute.
 
 ## Security
 The server listens on `127.0.0.1` only and refuses requests with another `Host`, another `Origin` or no app header; receipt files are served only from inside `Receipts/`; the phone can change only a fixed list of fields (never the receipt file), a phone request is applied only if the expense has not changed since the page was built, and an inbox file larger than 1 MB is refused unread. The data stays on the computer that runs the server, except for what your phone automation sends to the AI model you chose, and whatever sync service you keep the project folder in. Note that `Mobile/expenses.html` holds a copy of all your expenses, so treat it, and the synced folder, as private.
@@ -144,6 +149,6 @@ The server listens on `127.0.0.1` only and refuses requests with another `Host`,
 The app follows [Semantic Versioning](https://semver.org/) and reached **1.0.0** after a beta (`0.9.0-beta.N`) and a release candidate (`1.0.0-rc.N`) phase: MAJOR for breaking data or API changes, MINOR for new features, PATCH for fixes. The current version is in `VERSION` and shown in the page header; `CHANGELOG.md` lists what changed. The data format has its own `schemaVersion` inside `expenses.json`.
 
 ## Notes
-- Dates are stored as `YYYY-MM-DD` and shown as `15 Mar 2026`. Receipt IDs for new receipts use `YYYYMMDD_HHMMSS`.
+- Dates are stored as `YYYY-MM-DD` and shown in your regional format. Receipt IDs for new receipts use `YYYYMMDD_HHMMSS`.
 - Notes are free text. The receipt prompt asks the model to write them in English; change the template if you prefer another language.
 - Currencies are never added together and no exchange rates are used.

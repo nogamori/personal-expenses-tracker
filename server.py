@@ -7,7 +7,7 @@ timestamped backups, and writes data/expenses.json atomically.
 Start:  python3 server.py [--port 8765]      Stop: Ctrl+C
 Listens on 127.0.0.1 only.
 """
-import argparse, copy, gzip, json, mimetypes, os, platform, re, sys, threading, time, uuid
+import argparse, copy, gzip, json, mimetypes, os, platform, re, subprocess, sys, threading, time, uuid
 from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
@@ -216,13 +216,15 @@ def write_mobile(doc):
             "categories": [{"n": c["name"], "e": c.get("emoji", ""),
                             "subs": [[s, (c.get("subcategoryEmoji") or {}).get(s, "")] for s in c["subcategories"]]} for c in doc["categories"]],
             "trips": {t["id"]: t["name"] for t in doc.get("trips", [])},
+            "format": doc.get("settings", {}).get("format", {}),
             "tripInfo": {t["id"]: [t["start"], t["end"], t["city"], t.get("country", "")] for t in doc.get("trips", [])},
             "rows": [[e["date"], e["merchant"], e["amount"], e["currency"], e["category"], e["subcategory"], e.get("notes", ""), e.get("tripId", ""),
                       (f"{e['installment']['index']}/{e['installment']['count']}" if e.get("installment") else ""),
                       (e.get("receiptFile") or "").split("/", 1)[-1], e["id"], e.get("updatedAt") or "", (e.get("installment") or {}).get("groupId", "")] for e in doc["expenses"]],
         }
         data = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
-        out = tpl.replace("/*DATA*/null", data, 1)
+        with open(os.path.join(PUBLIC, "shared.js"), encoding="utf-8") as f: shared = f.read()
+        out = tpl.replace("/*SHARED*/", shared, 1).replace("/*DATA*/null", data, 1)
         os.makedirs(os.path.dirname(MOBILE_OUT), exist_ok=True)
         tmp = MOBILE_OUT + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
@@ -325,6 +327,8 @@ def document_errors(doc):
     st = doc.get("settings")
     if not isinstance(st, dict) or not isinstance(st.get("homeCity"), str) or not st["homeCity"].strip() or len(st["homeCity"]) > 80:
         errs.append({"field": "settings", "message": "The home city is required (up to 80 characters)."})
+    if isinstance(st, dict) and not valid_format(st.get("format", {})):
+        errs.append({"field": "settings", "message": "Unknown regional format option."})
     trip_ids, seen_t = set(), set()
     for t in doc.get("trips", []):
         if not isinstance(t, dict) or not isinstance(t.get("id"), str) or t["id"] in seen_t:
@@ -434,7 +438,8 @@ def norm_date(v):
 
 def norm_amount(v):
     s = str(v).strip().replace(" ", "")
-    if "," in s and "." in s: s = s.replace(",", "")
+    if "," in s and "." in s:   # with both separators the last one is the decimal one: 1,234.50 or 1.234,50
+        s = s.replace(".", "").replace(",", ".") if s.rfind(",") > s.rfind(".") else s.replace(",", "")
     elif "," in s: s = s.replace(",", ".")
     if not re.fullmatch(r"-?\d+(\.\d+)?", s): raise ValueError(f"Invalid amount “{v}”.")
     a = round(float(s), 2)
@@ -864,6 +869,56 @@ def clean_trip(src):
     return t
 
 
+FORMAT_CHOICES = {"number": ("auto", "dot", "comma"), "symbol": ("auto", "before", "after"),
+                  "date": ("auto", "text", "dmy", "mdy", "iso"), "time": ("auto", "24", "12")}
+
+
+# The computer's own regional settings, used when a format is left on Automatic (the browser cannot see them).
+MAC_FORMAT_SCRIPT = """ObjC.import('Foundation');
+const d = $.NSDateFormatter.alloc.init; d.dateStyle = 1; d.timeStyle = 0;
+const t = $.NSDateFormatter.alloc.init; t.dateStyle = 0; t.timeStyle = 1;
+const n = $.NSNumberFormatter.alloc.init; n.numberStyle = 1;
+const c = $.NSNumberFormatter.alloc.init; c.numberStyle = 2;
+JSON.stringify({date: ObjC.unwrap(d.dateFormat), time: ObjC.unwrap(t.dateFormat), decimal: ObjC.unwrap(n.decimalSeparator),
+  group: ObjC.unwrap(n.groupingSeparator), currency: ObjC.unwrap(c.positiveFormat)})"""
+_SYSTEM_FORMAT = {"at": 0.0, "value": {}}
+
+
+def read_system_format():
+    """{date pattern, decimal, group, time '24'|'12', symbol 'before'|'after', spaced} on macOS and Windows; {} elsewhere or on failure."""
+    try:
+        if platform.system() == "Darwin":
+            out = subprocess.run(["/usr/bin/osascript", "-l", "JavaScript", "-e", MAC_FORMAT_SCRIPT], capture_output=True, text=True, timeout=5, check=True).stdout
+            r = json.loads(out)
+            cur = r["currency"]; sign, digit = cur.find("\u00a4"), cur.find("#") if "#" in cur else cur.find("0")
+            before = sign < digit
+            return {"source": "macOS", "date": r["date"], "decimal": r["decimal"], "group": r["group"],
+                    "time": "24" if "H" in r["time"] or "k" in r["time"] else "12",
+                    "symbol": "before" if before else "after", "spaced": any(ch.isspace() for ch in cur.split(";")[0].strip())}
+        if platform.system() == "Windows":
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Control Panel\International") as key:
+                v = lambda name: str(winreg.QueryValueEx(key, name)[0])
+                layout = int(v("iCurrency"))   # 0 $1.1   1 1.1$   2 $ 1.1   3 1.1 $
+                return {"source": "Windows", "date": v("sShortDate"), "decimal": v("sDecimal"), "group": v("sThousand"),
+                        "time": "24" if "H" in v("sShortTime") else "12",
+                        "symbol": "before" if layout in (0, 2) else "after", "spaced": layout in (2, 3)}
+    except Exception as ex:
+        print("Regional settings of the system could not be read:", ex)
+    return {}
+
+
+def system_format():
+    """Cached for a few seconds, so a change made in the system settings shows up on the next reload."""
+    if time.time() - _SYSTEM_FORMAT["at"] > 10:
+        _SYSTEM_FORMAT.update(at=time.time(), value=read_system_format())
+    return _SYSTEM_FORMAT["value"]
+
+
+def valid_format(f):
+    return isinstance(f, dict) and all(k in FORMAT_CHOICES and v in FORMAT_CHOICES[k] for k, v in f.items())
+
+
 def apply_trip_op(doc, b):
     """Home city and trips. Returns the label for the undo history."""
     op, trips = b.get("op"), doc.setdefault("trips", [])
@@ -872,6 +927,11 @@ def apply_trip_op(doc, b):
         if not city or len(city) > 80: raise ApiError(422, "Enter your home city (up to 80 characters).")
         doc.setdefault("settings", {})["homeCity"] = city
         return f"Changed home city to {city}"
+    if op == "setFormat":
+        f = b.get("format")
+        if not valid_format(f): raise ApiError(422, "Unknown regional format option.")
+        doc.setdefault("settings", {})["format"] = {k: v for k, v in f.items() if v != "auto"}
+        return "Changed the regional format"
     if op == "addTrip":
         t = clean_trip(b.get("trip") or {}); t["id"] = uuid.uuid4().hex[:8]; trips.append(t)
         return f"Added trip {t['name']}"
@@ -1026,8 +1086,9 @@ class Handler(BaseHTTPRequestHandler):
         p = unquote(urlparse(self.path).path)
         try:
             if p == "/api/data":
+                system = system_format()   # not stored: it belongs to the computer, not to the data
                 with LOCK:
-                    return self._json(200, load())
+                    return self._json(200, {**load(), "systemFormat": system})
             if p == "/api/history":
                 with LOCK:
                     items = [h for h in read_history() if os.path.isfile(os.path.join(BACKUPS, h["backup"]))]

@@ -46,7 +46,7 @@ function rowHtml(e, cats) {
     <td><input data-f="merchant" list="merchantListAll" class="${d('merchant')}" value="${esc(v('merchant'))}" autocomplete="off"></td>
     <td><select data-f="category" class="${d('category')}">${cats.map(c => `<option ${c.name === v('category') ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></td>
     <td><select data-f="subcategory" class="${d('subcategory')}">${subOptions(cat, v('subcategory'))}</select></td>
-    <td><input data-f="amount" class="num${d('amount')}" inputmode="decimal" value="${Number(v('amount')).toFixed(2)}"></td>
+    <td><input data-f="amount" class="num${d('amount')}" inputmode="decimal" value="${FMTR.input(v('amount'))}"></td>
     <td><input data-f="notes" class="${d('notes')}" value="${esc(v('notes'))}" autocomplete="off"></td>
     <td><select data-f="tripId" class="${d('tripId')}">${tripOptions(v('tripId'))}</select></td>
     <td class="c-flags">${detailsHtml(e, false)}</td></tr>`;
@@ -89,7 +89,7 @@ function renderDataBar() {
 function parseDateInput(s) {
   s = s.trim(); let m;
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return isNaN(new Date(s)) ? null : s;
-  if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2}|\d{4})$/))) { const y = m[3].length === 2 ? 2000 + +m[3] : +m[3]; const iso = isoDate(y, +m[2], +m[1]); return isNaN(new Date(iso)) || new Date(iso).getUTCDate() !== +m[1] ? null : iso; }
+  if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2}|\d{4})$/))) { const y = m[3].length === 2 ? 2000 + +m[3] : +m[3]; const iso = FMTR.monthFirst ? isoDate(y, +m[1], +m[2]) : isoDate(y, +m[2], +m[1]); return isNaN(new Date(iso)) || new Date(iso).getUTCDate() !== +m[1] ? null : iso; }
   if ((m = s.match(/^(\d{1,2}) ([A-Za-z]{3}) (\d{4})$/))) { const mi = MONTHS.findIndex(x => x.toLowerCase() === m[2].toLowerCase()); return mi < 0 ? null : isoDate(+m[3], mi + 1, +m[1]); }
   return null;
 }
@@ -134,7 +134,7 @@ function refreshRow(tr) {
     const f = inp.dataset.f, dirty = f in p;
     inp.classList.toggle('dirty', dirty);
     if (f === 'subcategory') { const cat = S.doc.categories.find(c => c.name === curVal(id, 'category')); inp.innerHTML = subOptions(cat, curVal(id, 'subcategory')); }
-    else if (document.activeElement !== inp) inp.value = f === 'amount' ? Number(curVal(id, f)).toFixed(2) : (curVal(id, f) ?? '');
+    else if (document.activeElement !== inp) inp.value = f === 'amount' ? FMTR.input(curVal(id, f)) : (curVal(id, f) ?? '');
   });
   renderDataBar();
 }
@@ -268,7 +268,7 @@ document.addEventListener('change', ev => {
   if (t.id === 'selAll') { D.shown.forEach(id => t.checked ? D.sel.add(id) : D.sel.delete(id)); return renderData(); }
   if (!t.dataset.f) return;
   const err = stage(t.closest('tr').dataset.id, t.dataset.f, t.value);
-  if (err) { toast(err, true); t.value = t.dataset.f === 'amount' ? Number(curVal(t.closest('tr').dataset.id, 'amount')).toFixed(2) : curVal(t.closest('tr').dataset.id, t.dataset.f); }
+  if (err) { toast(err, true); t.value = t.dataset.f === 'amount' ? FMTR.input(curVal(t.closest('tr').dataset.id, 'amount')) : curVal(t.closest('tr').dataset.id, t.dataset.f); }
   refreshRow(t.closest('tr'));
 });
 window.addEventListener('beforeunload', ev => { if (D.pending.size) { ev.preventDefault(); ev.returnValue = ''; } });
@@ -280,12 +280,12 @@ function addMonthsIso(iso, k) {
 }
 function planFor(totalCents, n, first) {
   const base = Math.floor(totalCents / n), r = totalCents - base * n;
-  return Array.from({ length: n }, (_, i) => ({ date: addMonthsIso(first, i), amount: ((base + (i < r ? 1 : 0)) / 100).toFixed(2) }));
+  return Array.from({ length: n }, (_, i) => ({ date: addMonthsIso(first, i), amount: FMTR.input((base + (i < r ? 1 : 0)) / 100) }));
 }
 function installmentsTool(id, editPlan = false) {
   const e0 = byId(id), plan = editPlan ? S.doc.expenses.filter(x => x.installment?.groupId === e0.installment.groupId).sort((a, b) => a.installment.index - b.installment.index) : [e0];
   const e = editPlan ? plan[0] : e0, sign = e.amount < 0 ? -1 : 1, total = editPlan ? plan.reduce((s, x) => s + Math.round(Math.abs(x.amount) * 100), 0) : Math.round(Math.abs(e.amount) * 100);
-  const P = editPlan ? { n: plan.length, first: plan[0].date, rows: plan.map(x => ({ date: x.date, amount: Math.abs(x.amount).toFixed(2) })) } : { n: 6, first: e.date, rows: [] };
+  const P = editPlan ? { n: plan.length, first: plan[0].date, rows: plan.map(x => ({ date: x.date, amount: FMTR.input(Math.abs(x.amount)) })) } : { n: 6, first: e.date, rows: [] };
   if (!editPlan) P.rows = planFor(total, P.n, P.first);
   toolDlg(editPlan ? 'Edit installment plan' : 'Split into installments', `<p class="muted small">${editPlan ? `${esc(e.merchant)} · ${plan.length} installments · ${fmtMoney(sign * total / 100, e.currency)} in total · bought on ${fmtDate(e.installment.purchaseDate || e.date)}. Change the number, the dates and the amounts; changing the number or the first date fills the rows in again.` : `${esc(e.merchant)} · ${fmtMoney(e.amount, e.currency)} · bought on ${fmtDate(e.date)}. The purchase becomes one entry per installment, each in the month it is paid.`}</p>
     <div class="formgrid"><label class="field"><span>Number of installments</span><input id="iN" type="number" min="2" max="120" value="${P.n}"></label>

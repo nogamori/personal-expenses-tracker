@@ -122,6 +122,8 @@ dialog { overflow: auto; }
 <dialog id="dlg"></dialog>
 <script>
 const DATA = /*DATA*/null;
+/*SHARED*/
+const FMTR = makeFormat(DATA.format);
 const rows = DATA.rows.map((r, i) => ({ i, date: r[0], merchant: r[1], amount: r[2], cur: r[3], cat: r[4], sub: r[5], notes: r[6], trip: r[7], inst: r[8], rec: r[9], id: r[10], upd: r[11], gid: r[12] }));
 const RECEIPT_SHORTCUT = 'Open Receipt';   // name of the Shortcut that opens a file from Expenses/Receipts
 const SHORTCUT_NAME = 'Expenses Mobile';   // the Shortcut that saves edit, delete and split requests in Expenses/Inbox
@@ -130,8 +132,8 @@ const emojiOf = Object.fromEntries(DATA.categories.map(c => [c.n, c.e || '']));
 const subEmoji = {}; DATA.categories.forEach(c => (c.subs || []).forEach(s => subEmoji[c.n + '|' + s[0]] = s[1] || ''));
 const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const pad = n => String(n).padStart(2, '0');
-const fmtDate = d => `${d.slice(8, 10)} ${MON[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}`;
-const money = (n, cur) => { try { return new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur }).format(n); } catch { return n.toFixed(2) + ' ' + cur; } };
+const fmtDate = d => FMTR.date(d);
+const money = (n, cur) => FMTR.money(n, cur);
 const alpha = (a, b) => a.localeCompare(b, 'en');
 const catLabel = c => ((emojiOf[c] || '') + ' ' + c).trim();
 const subLabel = (c, s) => ((subEmoji[c + '|' + s] || '') + ' ' + s).trim();
@@ -149,7 +151,7 @@ const tripInfo = id => { const x = DATA.tripInfo?.[id]; return x ? { id, name: D
 const daysBetween = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5) + 1;
 const inTripScope = r => S.trip === '*' ? !!(r.trip && DATA.trips[r.trip]) : r.trip === S.trip;
 const inPeriod = d => S.mode === 'all' || (S.mode === 'year' ? +d.slice(0, 4) === S.y : d.slice(0, 7) === `${S.y}-${pad(S.m + 1)}`);
-const matchQ = r => { if (!S.q) return true; const h = `${r.merchant} ${r.notes} ${r.cat} ${r.sub} ${r.amount} ${r.trip ? DATA.trips[r.trip] || '' : ''}`.toLowerCase(); return S.q.toLowerCase().split(/\s+/).every(w => h.includes(w)); };
+const matchQ = r => searchMatch(searchWords(S.q), [r.merchant, r.cat, r.sub, r.trip ? DATA.trips[r.trip] || '' : ''], `${r.notes} ${r.amount.toFixed(2)} ${textDate(r.date)} ${fmtDate(r.date)}`);
 const sum = list => { const t = {}; list.forEach(r => t[r.cur] = (t[r.cur] || 0) + r.amount); return t; };
 
 function renderTrips() {
@@ -227,7 +229,7 @@ const dlg = $('dlg');
 const lock = on => { dlg.dataset.locked = on ? '1' : ''; };   // forms ignore taps outside, so nothing typed is lost by accident
 const uid = () => { try { if (crypto.randomUUID) return crypto.randomUUID().replace(/-/g, '').slice(0, 24); } catch {} return Array.from({ length: 24 }, () => Math.floor(Math.random() * 36).toString(36)).join(''); };
 const validDate = d => /^\d{4}-\d{2}-\d{2}$/.test(d) && !isNaN(new Date(d + 'T12:00:00')) && new Date(d + 'T12:00:00').toISOString().slice(0, 10) === d;
-const parseAmount = v => { let t = String(v).trim().replace(/\s/g, ''); if (t.includes(',') && t.includes('.')) t = t.replace(/,/g, ''); else t = t.replace(',', '.'); if (!/^-?\d+(\.\d+)?$/.test(t)) return null; const n = Math.round(parseFloat(t) * 100) / 100; return n === 0 ? null : n; };
+const parseAmount = v => { const t = plainNumber(v); if (!/^-?\d+(\.\d+)?$/.test(t)) return null; const n = Math.round(parseFloat(t) * 100) / 100; return n === 0 ? null : n; };
 const addMonths = (d, k) => { const y = +d.slice(0, 4), m = +d.slice(5, 7) - 1, day = +d.slice(8, 10); const t = new Date(Date.UTC(y, m + k, 1)); const last = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() + 1, 0)).getUTCDate(); return `${t.getUTCFullYear()}-${pad(t.getUTCMonth() + 1)}-${pad(Math.min(day, last))}`; };
 const tripOptions = sel => `<option value="">(none)</option>` + Object.entries(DATA.trips).sort((x, y) => alpha(x[1], y[1])).map(([id, n]) => `<option value="${esc(id)}"${id === sel ? ' selected' : ''}>🧳 ${esc(n)}</option>`).join('');
 
@@ -281,7 +283,7 @@ function editForm(r) {
   const subOpts = (c, sel) => '<option value="">(none)</option>' + [...(DATA.categories.find(x => x.n === c)?.subs || [])].sort((x, y) => alpha(x[0], y[0])).map(x => `<option value="${esc(x[0])}"${x[0] === sel ? ' selected' : ''}>${esc(subLabel(c, x[0]))}</option>`).join('');
   dlg.innerHTML = `<div class="dlg form"><h3>Edit expense</h3>
     <label>Merchant<input id="eMer" value="${esc(r.merchant)}" autocomplete="off"></label>
-    <div class="two"><label>Amount<input id="eAmt" inputmode="decimal" value="${esc(String(r.amount))}"></label><label>Currency<input id="eCur" maxlength="3" value="${esc(r.cur)}" autocapitalize="characters"></label></div>
+    <div class="two"><label>Amount<input id="eAmt" inputmode="decimal" value="${FMTR.input(r.amount)}"></label><label>Currency<input id="eCur" maxlength="3" value="${esc(r.cur)}" autocapitalize="characters"></label></div>
     <label>Date<input id="eDate" type="date" value="${esc(r.date)}"></label>
     <label>Category<select id="eCat">${cats.map(c => `<option value="${esc(c.n)}"${c.n === r.cat ? ' selected' : ''}>${esc(catLabel(c.n))}</option>`).join('')}</select></label>
     <label>Subcategory<select id="eSub">${subOpts(r.cat, r.sub)}</select></label>
@@ -336,7 +338,7 @@ function splitForm(r) {
     <div class="actions"><button class="btn ghost" data-act="back">Cancel</button><button class="btn" data-act="splitgo" id="sGo">Split</button></div></div>`;
   const fill = () => {
     const n = Math.max(2, Math.min(120, parseInt($('sN').value, 10) || 2)), first = validDate($('sFirst').value) ? $('sFirst').value : r.date;
-    $('sRows').innerHTML = splitPlan(r.amount, n, first).map((p, k) => `<div class="instrow"><span class="n">${k + 1}/${n}</span><input type="date" class="sd" value="${p.date}"><input class="sa" inputmode="decimal" value="${p.amount.toFixed(2)}"></div>`).join('');
+    $('sRows').innerHTML = splitPlan(r.amount, n, first).map((p, k) => `<div class="instrow"><span class="n">${k + 1}/${n}</span><input type="date" class="sd" value="${p.date}"><input class="sa" inputmode="decimal" value="${FMTR.input(p.amount)}"></div>`).join('');
     total();
   };
   const total = () => {
@@ -389,7 +391,7 @@ $('sub').onchange = e => { const v = e.target.value; if (v) { const i = v.indexO
 $('clear').onclick = () => { S.q = ''; S.cat = ''; S.sub = ''; $('q').value = ''; render(); };
 $('cats').onclick = e => { const b = e.target.closest('.bar'); if (!b) return; const k = b.dataset.k; if (S.cat) { S.sub = S.sub === k ? '' : k; } else { S.cat = k; S.sub = ''; } S.limit = 60; render(); };
 $('list').onclick = e => { const m = e.target.closest('#more'); if (m) { S.limit += 100; return render(); } const b = e.target.closest('.row'); if (b) detail(+b.dataset.i); };
-{ const g = DATA.generated && new Date(DATA.generated); $('stamp').textContent = g && !isNaN(g) ? `Updated ${fmtDate(g.toLocaleDateString('en-CA'))} ${pad(g.getHours())}:${pad(g.getMinutes())}` : ''; }
+{ const g = DATA.generated && new Date(DATA.generated); $('stamp').textContent = g && !isNaN(g) ? `Updated ${fmtDate(g.toLocaleDateString('en-CA'))} ${FMTR.time(g)}` : ''; }
 render();
 </script>
 </body>

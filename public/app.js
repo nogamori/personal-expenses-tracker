@@ -6,13 +6,10 @@ const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const pad = n => String(n).padStart(2, '0');
 const isoDate = (y, m, d) => `${y}-${pad(m)}-${pad(d)}`;
-const fmtDate = iso => { if (!iso) return '—'; const [y, m, d] = iso.split('-'); return `${d} ${MONTHS[+m - 1]} ${y}`; };
+let FMTR = makeFormat();   // regional format; rebuilt from the settings every time the data is loaded
+const fmtDate = iso => (iso ? FMTR.date(iso) : '—');
 const fmtMonth = ym => { const [y, m] = ym.split('-'); return `${MONTHS[+m - 1]} ${y}`; };
-const nfCache = {};
-const fmtMoney = (v, cur) => {
-  try { return (nfCache[cur] ??= new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur })).format(v); }
-  catch { return `${v.toFixed(2)} ${cur}`; }
-};
+const fmtMoney = (v, cur) => FMTR.money(v, cur);
 const byName = (a, b) => a.localeCompare(b, 'en', { sensitivity: 'base' });
 const sortedCats = d => [...d.categories].sort((a, b) => byName(a.name, b.name));
 const sortedSubs = c => [...c.subcategories].sort(byName);
@@ -27,7 +24,7 @@ const sumC = list => list.reduce((s, e) => s + cents(e.amount), 0);
 const money = (c, cur) => fmtMoney(c / 100, cur);
 
 const RC_OK = /\.(jpe?g|png|webp|gif|heic|heif|pdf)$/i, RC_PREVIEW = /\.(jpe?g|png|webp|gif)$/i, RC_MAX = 25 * 1024 * 1024;
-const fmtSize = b => b >= 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
+const fmtSize = b => b >= 1048576 ? FMTR.fixed(b / 1048576, 1) + ' MB' : Math.max(1, Math.round(b / 1024)) + ' KB';
 
 const S = {
   history: [],
@@ -83,7 +80,7 @@ async function loadData(initial) {
     const r = await fetch('/api/data', { cache: 'no-store' });
     const j = await r.json();
     if (!r.ok) throw new Error(j.error || `Failed to load (${r.status})`);
-    S.doc = j; S.error = null;
+    S.doc = j; S.error = null; FMTR = makeFormat(j.settings?.format, j.systemFormat);
     await loadHistory();
     if (initial) initFilters();
   } catch (e) {
@@ -103,7 +100,7 @@ function ago(iso) {
   const m = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
   if (m < 1) return 'just now'; if (m < 60) return `${m} min ago`;
   const d = new Date(iso), same = d.toDateString() === new Date().toDateString();
-  return same ? `today ${pad(d.getHours())}:${pad(d.getMinutes())}` : `${fmtDate(d.toLocaleDateString('en-CA'))} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return same ? `today ${FMTR.time(d)}` : `${fmtDate(d.toLocaleDateString('en-CA'))} ${FMTR.time(d)}`;
 }
 function renderUndoBtn() {
   const b = $('#btnUndo'); if (!b) return;
@@ -190,10 +187,9 @@ function matchesBase(e, { ignoreCategory = false, ignoreTrip = false } = {}) {
     if (f.category && e.category !== f.category) return false;
     if (f.subcategory && e.subcategory !== f.subcategory) return false;
   }
-  if (f.merchant && !e.merchant.toLowerCase().includes(f.merchant.toLowerCase())) return false;
+  if (f.merchant && !searchMatch(searchWords(f.merchant), [e.merchant])) return false;
   if (f.q) {
-    const hay = `${e.merchant} ${e.notes} ${e.category} ${e.subcategory} ${e.amount.toFixed(2)} ${fmtDate(e.date)}`.toLowerCase();
-    if (!f.q.toLowerCase().split(/\s+/).every(t => hay.includes(t))) return false;
+    if (!searchMatch(searchWords(f.q), [e.merchant, e.category, e.subcategory], `${e.notes} ${e.amount.toFixed(2)} ${textDate(e.date)} ${fmtDate(e.date)}`)) return false;
   }
   return true;
 }
@@ -364,7 +360,7 @@ function renderTrend() {
   let svg = '';
   for (let i = 0; i <= 4; i++) {
     const v = max / 4 * i, y = T + plotH - (v / max) * plotH;
-    svg += `<line class="grid" x1="${L}" x2="${W - 4}" y1="${y}" y2="${y}"/><text x="${L - 6}" y="${y + 4}" text-anchor="end">${v >= 1000 ? (v / 1000).toFixed(v % 1000 ? 1 : 0) + 'k' : v.toFixed(0)}</text>`;
+    svg += `<line class="grid" x1="${L}" x2="${W - 4}" y1="${y}" y2="${y}"/><text x="${L - 6}" y="${y + 4}" text-anchor="end">${v >= 1000 ? FMTR.fixed(v / 1000, v % 1000 ? 1 : 0) + 'k' : v.toFixed(0)}</text>`;
   }
   const every = months.length > 24 ? 6 : months.length > 12 ? 3 : 1;
   months.forEach((m, i) => {
@@ -507,7 +503,7 @@ function openForm(e) {
   openDlg($('#formDlg'), `<form id="expForm" novalidate><div class="dlg-head"><h2>${isNew ? 'Add expense' : 'Edit expense'}</h2><button type="button" class="btn ghost" data-cancel aria-label="Close">✕</button></div>
     <div class="dlg-body"><div class="formgrid">
       <label class="field"><span>Date</span><input type="date" name="date" value="${esc(x.date)}" required><div class="err" data-for="date"></div></label>
-      <label class="field"><span>Amount (negative for a refund)</span><input name="amount" inputmode="decimal" value="${x.amount === '' ? '' : Number(x.amount).toFixed(2)}" placeholder="0.00" required><div class="err" data-for="amount"></div></label>
+      <label class="field"><span>Amount (negative for a refund)</span><input name="amount" inputmode="decimal" value="${x.amount === '' ? '' : FMTR.input(x.amount)}" placeholder="0.00" required><div class="err" data-for="amount"></div></label>
       <label class="field full"><span>Merchant</span><input name="merchant" list="merchantListAll" value="${esc(x.merchant)}" required autocomplete="off"><div class="err" data-for="merchant"></div></label>
       <label class="field"><span>Category</span><select name="category">${catOpts}</select><div class="err" data-for="category"></div></label>
       <label class="field"><span>Subcategory</span><select name="subcategory"></select><div class="err" data-for="subcategory"></div></label>
@@ -568,8 +564,7 @@ function readForm() {
   return { date: f.date.value, merchant: f.merchant.value.trim(), amount: f.amount.value.trim(), currency: f.currency.value.trim().toUpperCase(), category: f.category.value, subcategory: f.subcategory.value, notes: f.notes.value, tripId: f.tripId.value };
 }
 function parseAmount(s) {
-  let t = s.replace(/\s/g, '');
-  if (t.includes(',') && t.includes('.')) t = t.replace(/,/g, ''); else if (t.includes(',')) t = t.replace(',', '.');
+  const t = plainNumber(s);
   if (!/^-?\d+(\.\d+)?$/.test(t)) return NaN;
   return Number(t);
 }

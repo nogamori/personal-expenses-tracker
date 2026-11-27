@@ -6,6 +6,15 @@ The app went through **beta** (`0.9.0-beta.N`) and **release candidate** (`1.0.0
 From 1.0.0: MAJOR for breaking data or API changes, MINOR for new features, PATCH for fixes.
 `schemaVersion` inside `data/expenses.json` is separate and only changes when the data format changes.
 
+## [1.1.0] - 2026-11-27
+### Added
+- **Regional format** (*Settings › Regional format*): number, currency symbol position, date and time. *Automatic* follows the settings of the computer that runs the server (macOS and Windows; elsewhere, and on the phone page, the browser's language and region). A choice made there applies to the dashboard and the phone page.
+- Amounts can be typed as `1,234.50` or `1.234,50`.
+### Changed
+- **Search** (main search, merchant, trips and the phone page) ignores accents and, in names, spaces and punctuation (`aigu` finds *Aigües*, `mcdonalds` finds *McDonald's*), and finds an amount typed with a comma. There is no fuzzy matching, so totals never include near misses.
+### Fixed
+- An amount with both separators, such as `1.234,50`, typed or read from a receipt, was misread.
+
 ## [1.0.0] - 2026-11-20
 First public release. It is the last release candidate (1.0.0-rc.2) plus:
 ### Added

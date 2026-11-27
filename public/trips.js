@@ -12,11 +12,11 @@ function renderTripsCard() {
   if (!el) return;
   el.hidden = !inTrips();
   if (!inTrips() || !S.doc) return;
-  const cur = S.f.currency, q = T.q.trim().toLowerCase(), trips = sortedTrips();
+  const cur = S.f.currency, q = searchWords(T.q), trips = sortedTrips();
   const filtered = !!(S.f.q || S.f.category || S.f.subcategory || S.f.merchant);
   const rowsOf = t => S.doc.expenses.filter(e => e.tripId === t.id && matchesBase(e, { ignoreTrip: true }));
   const items = trips.map(t => ({ t, rows: rowsOf(t) }))
-    .filter(x => (!q || `${x.t.name} ${x.t.city} ${x.t.country || ''}`.toLowerCase().includes(q)) && (!filtered || x.rows.length));
+    .filter(x => searchMatch(q, [x.t.name, x.t.city, x.t.country || '']) && (!filtered || x.rows.length));
   const allRows = items.flatMap(x => x.rows);
   let year = '', html = `<div class="tripitem ${S.tripSel ? '' : 'selected'}" role="button" tabindex="0" data-tripsel=""><div class="nm">🧳 All trips</div><div class="amt">${money(sumC(allRows), cur)}</div>
       <div class="meta">${items.length} ${items.length === 1 ? 'trip' : 'trips'} · ${allRows.length} ${allRows.length === 1 ? 'expense' : 'expenses'}</div></div>`;
